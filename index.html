@@ -987,6 +987,15 @@ textarea.adm-in{resize:vertical;line-height:1.8}
 .adm-galadd{width:64px;height:64px;border-radius:8px;border:1.5px dashed var(--accent);background:transparent;color:var(--accent);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;cursor:pointer;font:inherit;font-size:.6rem;font-weight:700;padding:0}
 .adm-galadd:hover{background:var(--chip)}
 .adm-galadd .ic{width:15px;height:15px}
+/* تب کلاس‌ها: گروه‌بندی بر اساس پایه، هر کلاس یک ردیف فشرده */
+.adm-gtitle{display:flex;align-items:center;gap:6px;margin:18px 0 10px;color:var(--primary);font-size:.95rem;font-weight:800}
+.adm-gtitle:first-child{margin-top:0}
+.adm-gempty{padding:12px 14px;border:1px dashed var(--border);border-radius:10px;color:var(--text-light);font-size:.84rem;font-weight:600}
+.adm-cls-card{padding:10px 12px;margin-bottom:8px}
+.adm-cls-card .adm-card-head{margin-bottom:0}
+.adm-cname{flex:1;min-width:150px;font-weight:800}
+.adm-cls-add{margin-bottom:16px}
+.adm-cls-add .adm-card-head{margin-bottom:0}
 
 /* جدول ویرایش شبکه دروس پایه */
 .adm-grid-wrap{border:1px solid var(--border);border-radius:10px;overflow-x:auto;background:var(--surface)}
@@ -1369,6 +1378,7 @@ body.dark-mode .cs-panel{box-shadow:0 12px 32px rgba(0,0,0,.5)}
   <div class="admin-tabs">
     <button type="button" data-atab="ann" class="active"><svg class="ic" aria-hidden="true"><use href="#i-bell"/></svg>اطلاعیه‌ها</button>
     <button type="button" data-atab="grid"><svg class="ic" aria-hidden="true"><use href="#i-calendar"/></svg>برنامه کلاسی</button>
+    <button type="button" data-atab="cls"><svg class="ic" aria-hidden="true"><use href="#i-users"/></svg>کلاس‌ها</button>
     <button type="button" data-atab="exam"><svg class="ic" aria-hidden="true"><use href="#i-file"/></svg>امتحانات</button>
     <button type="button" data-atab="teacher"><svg class="ic" aria-hidden="true"><use href="#i-cap"/></svg>دبیران و کادر مدرسه</button>
     <button type="button" data-atab="gallery"><svg class="ic" aria-hidden="true"><use href="#i-image"/></svg>گالری</button>
@@ -1394,6 +1404,25 @@ body.dark-mode .cs-panel{box-shadow:0 12px 32px rgba(0,0,0,.5)}
           <select class="adm-in" id="admSchedClass" aria-label="انتخاب کلاس برای ویرایش" style="max-width:190px"></select>
         </div>
         <div class="adm-grid-wrap" id="admGridWrap"></div>
+      </section>
+
+      <section class="admin-tab" id="atab-cls">
+        <div class="adm-note"><svg class="ic" aria-hidden="true"><use href="#i-info"/></svg><span>با «افزودن کلاس» کلاس جدید بسازید، نام و پایهٔ آن (هفتم، هشتم یا نهم) را مشخص کنید. کلاس‌ها در منوهای برنامه کلاسی، امتحانات و اطلاعیه‌ها هم ظاهر می‌شوند. حذف یک کلاس، برنامه کلاسی و آزمون‌های همان کلاس را هم پاک می‌کند. تغییرات با «ذخیره تغییرات» ثبت می‌شود.</span></div>
+        <div class="adm-card adm-cls-add">
+          <div class="adm-card-head">
+            <input class="adm-in adm-cname" id="admClassNewName" maxlength="30" placeholder="نام کلاس جدید (مثلاً هفتم ۵)" aria-label="نام کلاس جدید">
+            <select class="adm-in" id="admClassNewGrade" style="max-width:130px" aria-label="پایه کلاس جدید">
+              <option value="7">پایه هفتم</option>
+              <option value="8">پایه هشتم</option>
+              <option value="9">پایه نهم</option>
+            </select>
+            <button type="button" class="adm-add" id="admClassAdd"><svg class="ic" aria-hidden="true"><use href="#i-plus"/></svg>افزودن کلاس</button>
+          </div>
+        </div>
+        <div class="adm-toolbar">
+          <div><strong>کلاس‌های مدرسه</strong><span class="adm-count" id="admClassCount"></span></div>
+        </div>
+        <div id="admClassList"></div>
       </section>
 
       <section class="admin-tab" id="atab-exam">
@@ -1667,7 +1696,7 @@ const PERIODS = [
 ];
 
 // فهرست ۱۲ کلاس مدرسه (پایهٔ هفتم ۴ کلاس دارد — Task 53)
-const CLASSES = [
+const DEFAULT_CLASSES = [
   { id: '7-1', name: 'هفتم ۱', grade: 7, room: '۱۰۱', students: 28 },
   { id: '7-2', name: 'هفتم ۲', grade: 7, room: '۱۰۲', students: 27 },
   { id: '7-3', name: 'هفتم ۳', grade: 7, room: '۱۰۳', students: 29 },
@@ -1681,6 +1710,9 @@ const CLASSES = [
   { id: '9-3', name: 'نهم ۳',  grade: 9, room: '۳۰۳', students: 26 },
   { id: '9-4', name: 'نهم ۴',  grade: 9, room: '۳۰۴', students: 25 },
 ];
+
+// فهرست زندهٔ کلاس‌ها؛ ویرایش مدیر در تب «کلاس‌ها» (پنل مدیریت) در SchoolDB ثبت می‌شود
+var CLASSES = Array.isArray(SchoolDB.get('classes')) ? SchoolDB.get('classes') : DEFAULT_CLASSES;
 
 // دبیران مدرسه: برای هر درس یک دبیر مجرب
 // هر دبیر به همه کلاس‌های مدرسه (۱۲ کلاس) در درس خود تدریس می‌دهد.
@@ -2011,7 +2043,7 @@ function classOptions() {
   [7, 8, 9].forEach(function (g) {
     html += '<optgroup label="پایه ' + GRADE_NAMES[g] + '">';
     CLASSES.filter(function (c) { return c.grade === g; }).forEach(function (c) {
-      html += '<option value="' + c.id + '">کلاس ' + c.name + '</option>';
+      html += '<option value="' + escHTML(c.id) + '">کلاس ' + escHTML(c.name) + '</option>';
     });
     html += '</optgroup>';
   });
@@ -2027,15 +2059,28 @@ function fillSelects() {
     '<option value="all">همه کلاس‌ها</option>' + classOptions();
 }
 
+// بازسازی منوهای کلاسِ سایت پس از تغییر فهرست کلاس‌ها (انتخاب فعلی بازدیدکننده حفظ می‌شود)
+function refreshClassSelects() {
+  var ss = document.getElementById('schedSelect');
+  var ef = document.getElementById('examFilter');
+  var sv = ss.value, fv = ef.value;
+  fillSelects();
+  if (sv && classById(sv)) ss.value = sv;
+  if (fv === 'all' || classById(fv)) ef.value = fv;
+}
+
 /* ---------- برنامه کلاسی هر کلاس (Task 12: برنامه اختصاصی هر کلاس) ----------
    پیش‌فرض هر کلاس از شبکه پایه پایه‌اش با «چرخش روزها» ساخته می‌شود؛
    مدیر می‌تواند در پنل برای هر کلاس برنامه جداگانه تعیین کند. */
-function buildDefaultSchedule(classId) {
-  var cls = classById(classId);
+function buildDefaultSchedule(classId, list) {
+  list = list || CLASSES; // فهرست اختیاری: پنل مدیریت برای کلاس‌های ذخیره‌نشده هم برنامه می‌سازد
+  var cls = null;
+  for (var li = 0; li < list.length; li++) { if (list[li].id === classId) { cls = list[li]; break; } }
   if (!cls) return [];
-  var sameGrade = CLASSES.filter(function (c) { return c.grade === cls.grade; });
+  var sameGrade = list.filter(function (c) { return Number(c.grade) === Number(cls.grade); });
   var shift = sameGrade.indexOf(cls); // شماره کلاس در پایه
   var grid = WEEK_GRID[cls.grade];
+  if (!grid) return [];
   return grid.map(function (day, i) { return grid[(i + shift) % grid.length].slice(); });
 }
 
@@ -2954,7 +2999,12 @@ function openAdminPanel() {
     teachers: adminDeepCopy(TEACHERS),
     exams: adminDeepCopy(EXAMS),
     gallery: adminDeepCopy(GALLERY_ITEMS),
+    classes: adminDeepCopy(CLASSES),
   };
+  ADMIN_WORK.classes.forEach(function (c) { adminEnsureClassData(c); });
+  adminClassesChanged = false;
+  adminFillSchedClass();
+  adminRenderClasses();
   adminRenderAnnList();
   adminRenderSched();
   adminRenderExamList();
@@ -3101,8 +3151,8 @@ function adminGradeOptions(current) {
   }).join('');
 }
 function adminClassOptions(current) {
-  return CLASSES.map(function (c) {
-    return '<option value="' + c.id + '"' + (c.id === current ? ' selected' : '') + '>کلاس ' + c.name + '</option>';
+  return adminClassList().map(function (c) {
+    return '<option value="' + escHTML(c.id) + '"' + (c.id === current ? ' selected' : '') + '>کلاس ' + escHTML(c.name || 'بدون نام') + '</option>';
   }).join('');
 }
 // عکس‌های آپلودیِ یک اطلاعیه در پنل (Task 53: چندعکسی؛ شامل مهاجرت دادهٔ تکیِ قدیمی)
@@ -3431,7 +3481,7 @@ function adminCollectExams() {
     var e = ADMIN_WORK.exams[i];
     if (!e) return;
     e.subject = card.querySelector('.adm-exsubject').value.trim();
-    var cls = classById(card.querySelector('.adm-exclass').value);
+    var cls = adminClassById(card.querySelector('.adm-exclass').value);
     if (cls) { e.classId = cls.id; e.className = cls.name; }
     var xd = adminCardDate(card);
     e.dateY = xd.y; e.dateM = xd.m; e.dateD = xd.d;
@@ -3498,13 +3548,210 @@ function adminCollectTeachers() {
   });
 }
 
+/* ---------- تب کلاس‌ها ---------- */
+// آیا فهرست کلاس‌ها تغییر کرده و منوهای وابسته (برنامه کلاسی، آزمون، اطلاعیه) باید بازسازی شوند؟
+var adminClassesChanged = false;
+
+function adminClassList() { return ADMIN_WORK ? ADMIN_WORK.classes : CLASSES; }
+function adminClassById(id) {
+  var list = adminClassList();
+  for (var i = 0; i < list.length; i++) { if (list[i].id === id) return list[i]; }
+  return null;
+}
+
+// شناسهٔ تازه برای کلاس جدید (هرگز با شناسهٔ کلاس‌های دیگر یکی نمی‌شود)
+function adminNewClassId(grade) {
+  var max = 0;
+  ADMIN_WORK.classes.forEach(function (c) {
+    var m = /^(\d+)-(\d+)$/.exec(c.id);
+    if (m && Number(m[1]) === grade && Number(m[2]) > max) max = Number(m[2]);
+  });
+  return grade + '-' + (max + 1);
+}
+
+// هر کلاس باید برنامهٔ هفتگی و جدول دبیرِ خودش را در دادهٔ کاری داشته باشد
+function adminEnsureClassData(c) {
+  if (!Array.isArray(ADMIN_WORK.sched[c.id]) || !ADMIN_WORK.sched[c.id].length) {
+    ADMIN_WORK.sched[c.id] = buildDefaultSchedule(c.id, ADMIN_WORK.classes);
+  }
+  if (!Array.isArray(ADMIN_WORK.schedTeachers[c.id]) || !ADMIN_WORK.schedTeachers[c.id].length) {
+    ADMIN_WORK.schedTeachers[c.id] = DAYS.map(function () { return PERIODS.map(function () { return ''; }); });
+  }
+}
+
+function adminClassCard(c, i) {
+  return (
+    '<div class="adm-card adm-cls-card" data-i="' + i + '">' +
+    '<div class="adm-card-head">' +
+    '<input class="adm-in adm-cname" value="' + escHTML(c.name) + '" maxlength="30" placeholder="نام کلاس (مثلاً هفتم ۵)" aria-label="نام کلاس">' +
+    '<select class="adm-in adm-cgrade" style="max-width:130px" aria-label="پایه کلاس">' + adminGradeOptions(c.grade) + '</select>' +
+    '<button type="button" class="adm-del" data-del="class" title="حذف کلاس" aria-label="حذف کلاس">' + icon('trash') + '</button>' +
+    '</div>' +
+    '</div>'
+  );
+}
+function adminRenderClasses() {
+  document.getElementById('admClassCount').textContent = toFa(ADMIN_WORK.classes.length) + ' کلاس';
+  var html = '';
+  [7, 8, 9].forEach(function (g) {
+    var items = '', n = 0;
+    ADMIN_WORK.classes.forEach(function (c, i) {
+      if (Number(c.grade) !== g) return;
+      n++;
+      items += adminClassCard(c, i);
+    });
+    html += '<h4 class="adm-gtitle">پایه ' + GRADE_NAMES[g] + (n ? '<span class="adm-count">' + toFa(n) + ' کلاس</span>' : '') + '</h4>' +
+      (items || '<div class="adm-gempty">برای این پایه هنوز کلاسی ثبت نشده است.</div>');
+  });
+  document.getElementById('admClassList').innerHTML = html;
+}
+function adminCollectClasses() {
+  document.querySelectorAll('#admClassList .adm-cls-card').forEach(function (card) {
+    var c = ADMIN_WORK.classes[Number(card.getAttribute('data-i'))];
+    if (!c) return;
+    // نویسه‌های خطرناک HTML حذف می‌شوند؛ نام کلاس در چند بخش سایت درون HTML نمایش داده می‌شود
+    c.name = card.querySelector('.adm-cname').value.replace(/[<>&"'`\\]/g, '').replace(/\s+/g, ' ').trim();
+    c.grade = Number(card.querySelector('.adm-cgrade').value);
+  });
+}
+
+// منوی انتخاب کلاس در تب «برنامه کلاسی» (به‌تفکیک پایه، انتخاب فعلی حفظ می‌شود)
+function adminFillSchedClass() {
+  var sel = document.getElementById('admSchedClass');
+  var prev = sel.value;
+  var html = '';
+  [7, 8, 9].forEach(function (g) {
+    var items = ADMIN_WORK.classes.filter(function (c) { return Number(c.grade) === g; });
+    if (!items.length) return;
+    html += '<optgroup label="پایه ' + GRADE_NAMES[g] + '">' + items.map(function (c) {
+      return '<option value="' + escHTML(c.id) + '">کلاس ' + escHTML(c.name || 'بدون نام') + '</option>';
+    }).join('') + '</optgroup>';
+  });
+  sel.innerHTML = html;
+  sel.value = adminClassById(prev) ? prev : (ADMIN_WORK.classes[0] ? ADMIN_WORK.classes[0].id : '');
+}
+
+// بازسازی بخش‌هایی که به فهرست کلاس‌ها وابسته‌اند (ابتدا مقدارهای فعلی فرم‌ها خوانده می‌شود)
+function adminRefreshClassDeps() {
+  adminCollectClasses();
+  adminCollectAnn();
+  adminCollectExams();
+  adminCollectSched();
+  adminFillSchedClass();
+  adminRenderSched();
+  adminRenderAnnList();
+  adminRenderExamList();
+}
+
+// کلید یکتایی نام کلاس در یک پایه (ارقام فارسی/انگلیسی و فاصله‌ها یکسان گرفته می‌شوند)
+function adminClassKey(name, grade) {
+  return grade + '|' + faToEn(name).replace(/\s+/g, '').replace(/ي/g, 'ی').replace(/ك/g, 'ک').toLowerCase();
+}
+
+function adminAddClass() {
+  adminCollectClasses();
+  var nameIn = document.getElementById('admClassNewName');
+  var g = Number(document.getElementById('admClassNewGrade').value) || 7;
+  var name = nameIn.value.replace(/[<>&"'`\\]/g, '').replace(/\s+/g, ' ').trim();
+  if (!name) { showToast('نام کلاس را بنویسید، سپس «افزودن کلاس» را بزنید.'); nameIn.focus(); return; }
+  var key = adminClassKey(name, g);
+  for (var i = 0; i < ADMIN_WORK.classes.length; i++) {
+    if (adminClassKey(ADMIN_WORK.classes[i].name, Number(ADMIN_WORK.classes[i].grade)) === key) {
+      showToast('کلاسی با نام «' + name + '» در پایهٔ ' + GRADE_NAMES[g] + ' وجود دارد.');
+      nameIn.focus();
+      return;
+    }
+  }
+  var c = { id: adminNewClassId(g), name: name, grade: g };
+  ADMIN_WORK.classes.push(c);
+  adminEnsureClassData(c);
+  adminRenderClasses();
+  nameIn.value = ''; // پایهٔ انتخاب‌شده می‌ماند تا چند کلاسِ پشت‌سرهم اضافه شود
+  nameIn.focus();
+  adminClassesChanged = true;
+  adminDirty = true;
+  showToast('کلاس «' + name + '» به پایهٔ ' + GRADE_NAMES[g] + ' اضافه شد. برای ثبت نهایی «ذخیره تغییرات» را بزنید.');
+}
+
+// تغییر پایهٔ یک کلاس: اگر برنامه‌اش هنوز همان برنامهٔ پیش‌فرضِ پایهٔ قبلی است، برای پایهٔ جدید دوباره ساخته می‌شود
+function adminChangeClassGrade(card) {
+  var c = ADMIN_WORK.classes[Number(card.getAttribute('data-i'))];
+  if (!c) return;
+  adminCollectSched();
+  adminEnsureClassData(c);
+  var oldGrade = c.grade;
+  var wasDefault = JSON.stringify(ADMIN_WORK.sched[c.id]) === JSON.stringify(buildDefaultSchedule(c.id, ADMIN_WORK.classes));
+  adminCollectClasses();
+  if (c.grade !== oldGrade && wasDefault) ADMIN_WORK.sched[c.id] = buildDefaultSchedule(c.id, ADMIN_WORK.classes);
+  adminRenderClasses();
+}
+
+// حذف کلاس همراه با برنامه و آزمون‌هایش؛ اطلاعیهٔ مخصوص آن کلاس به کل پایه منتقل می‌شود
+function adminDeleteClass(i) {
+  adminCollectClasses();
+  adminCollectAnn();
+  adminCollectExams();
+  adminCollectSched();
+  var c = ADMIN_WORK.classes[i];
+  if (!c) return false;
+  var exCount = ADMIN_WORK.exams.filter(function (e) { return e.classId === c.id; }).length;
+  var anCount = ADMIN_WORK.ann.filter(function (a) { return a.aud && a.aud.type === 'class' && a.aud.classId === c.id; }).length;
+  var msg = 'کلاس «' + (c.name || 'بدون نام') + '» حذف شود؟\nبرنامه کلاسی این کلاس' +
+    (exCount ? ' و ' + toFa(exCount) + ' آزمون ثبت‌شده برای آن' : '') + ' هم پاک می‌شود.' +
+    (anCount ? '\n' + toFa(anCount) + ' اطلاعیهٔ مخصوص این کلاس برای کل پایه ' + GRADE_NAMES[c.grade] + ' نمایش داده می‌شود.' : '');
+  if (!window.confirm(msg)) return false;
+  ADMIN_WORK.classes.splice(i, 1);
+  delete ADMIN_WORK.sched[c.id];
+  delete ADMIN_WORK.schedTeachers[c.id];
+  ADMIN_WORK.exams = ADMIN_WORK.exams.filter(function (e) { return e.classId !== c.id; });
+  ADMIN_WORK.ann.forEach(function (a) {
+    if (a.aud && a.aud.type === 'class' && a.aud.classId === c.id) a.aud = { type: 'grade', grade: c.grade };
+  });
+  adminRenderClasses();
+  adminFillSchedClass();
+  adminRenderSched();
+  adminRenderAnnList();
+  adminRenderExamList();
+  adminClassesChanged = true;
+  return true;
+}
+
+// رفتن به کارت یک کلاس (زبانهٔ کلاس‌ها باز می‌شود و نام آن فوکوس می‌گیرد)
+function adminGoToClass(i) {
+  var tabBtn = document.querySelector('.admin-tabs button[data-atab="cls"]');
+  if (tabBtn && !tabBtn.classList.contains('active')) tabBtn.click();
+  var card = document.querySelector('#admClassList .adm-cls-card[data-i="' + i + '"]');
+  if (card) {
+    card.scrollIntoView({ block: 'center' });
+    card.querySelector('.adm-cname').focus();
+  }
+}
+
+// اعتبارسنجی پیش از ذخیره: نام خالی یا نام تکراری در یک پایه
+function adminValidateClasses() {
+  var seen = {};
+  for (var i = 0; i < ADMIN_WORK.classes.length; i++) {
+    var c = ADMIN_WORK.classes[i];
+    var key = adminClassKey(c.name, c.grade);
+    var problem = '';
+    if (!c.name) problem = 'نام یکی از کلاس‌ها خالی است؛ نام را بنویسید یا آن کلاس را حذف کنید.';
+    else if (seen[key]) problem = 'نام کلاس «' + c.name + '» در پایهٔ ' + GRADE_NAMES[c.grade] + ' تکراری است.';
+    if (problem) { adminGoToClass(i); showToast(problem); return false; }
+    seen[key] = true;
+  }
+  return true;
+}
+
 /* ---------- ذخیره همه تغییرات ---------- */
 function adminSaveAll() {
+  adminCollectClasses();
   adminCollectAnn();
   adminCollectSched();
   adminCollectExams();
   adminCollectTeachers();
   adminCollectGallery();
+
+  if (!adminValidateClasses()) return;
 
   for (var i = 0; i < ADMIN_WORK.ann.length; i++) {
     if (!ADMIN_WORK.ann[i].title) {
@@ -3532,6 +3779,11 @@ function adminSaveAll() {
       return;
     }
   }
+
+  // کلاس‌ها: اعمال روی فهرست زنده؛ نام کلاسِ ثبت‌شده در آزمون‌ها هم با نام جدید هماهنگ می‌شود
+  CLASSES.length = 0;
+  ADMIN_WORK.classes.forEach(function (c) { CLASSES.push(adminDeepCopy(c)); });
+  ADMIN_WORK.exams.forEach(function (e) { var ec = classById(e.classId); if (ec) e.className = ec.name; });
 
   // اعمال روی داده‌های زنده سایت (با مرتب‌سازی تاریخ: اطلاعیه جدیدترین اول، آزمون بر اساس تاریخ)
   sortAnnouncements(ADMIN_WORK.ann);
@@ -3563,6 +3815,7 @@ function adminSaveAll() {
     exams: EXAMS,
     teachers: TEACHERS,
     gallery: GALLERY_ITEMS,
+    classes: CLASSES,
   });
   if (!ok) {
     showToast('ارتباط با سرور برقرار نیست؛ تغییرات روی صفحه اعمال شد اما ذخیره نشد. صفحه را دوباره باز کنید.');
@@ -3570,12 +3823,18 @@ function adminSaveAll() {
   }
 
   // بازرندر زنده بخش‌های سایت
+  refreshClassSelects();
   renderAnnouncements();
   renderExams(document.getElementById('examFilter').value || 'all');
   renderScheduleView(document.getElementById('schedSelect').value || '');
   renderTeachers();
   renderGallery();
 
+  if (adminClassesChanged) { // منوهای وابستهٔ پنل (برنامه کلاسی، آزمون، اطلاعیه) با کلاس‌های تازه بازسازی شوند
+    adminRefreshClassDeps();
+    adminRenderClasses();
+    adminClassesChanged = false;
+  }
   adminDirty = false;
   showToast('تغییرات با موفقیت ثبت شد.');
 }
@@ -3630,6 +3889,10 @@ function adminInit() {
   // زبانه‌ها
   document.querySelectorAll('.admin-tabs button').forEach(function (b) {
     b.addEventListener('click', function () {
+      if (adminClassesChanged && b.getAttribute('data-atab') !== 'cls') {
+        adminRefreshClassDeps();
+        adminClassesChanged = false;
+      }
       document.querySelectorAll('.admin-tabs button').forEach(function (x) {
         x.classList.toggle('active', x === b);
       });
@@ -3660,9 +3923,11 @@ function adminInit() {
   // افزودن آزمون
   document.getElementById('admExamAdd').addEventListener('click', function () {
     adminCollectExams();
+    var firstCls = ADMIN_WORK.classes[0];
+    if (!firstCls) { showToast('ابتدا در زبانهٔ «کلاس‌ها» یک کلاس بسازید.'); return; }
     var tdE = adminTodayParts();
     ADMIN_WORK.exams.unshift({
-      subject: 'درس جدید', classId: '7-1', className: 'هفتم ۱',
+      subject: 'درس جدید', classId: firstCls.id, className: firstCls.name,
       day: 0, date: composeFaDate(tdE.d, tdE.m, tdE.y), dateY: tdE.y, dateM: tdE.m, dateD: tdE.d,
       note: 'سؤالات تشریحی و تستی — مدت آزمون ۹۰ دقیقه',
     });
@@ -3838,6 +4103,8 @@ function adminInit() {
       adminCollectTeachers();
       ADMIN_WORK.teachers.splice(i, 1);
       adminRenderTeachers();
+    } else if (kind === 'class') {
+      if (!adminDeleteClass(i)) return;
     } else if (kind === 'gallery') {
       if (!window.confirm('این تصویر از گالری حذف شود؟')) return;
       adminCollectGallery();
@@ -3917,6 +4184,18 @@ function adminInit() {
     }
   });
 
+  // تب کلاس‌ها
+  document.getElementById('admClassAdd').addEventListener('click', adminAddClass);
+  document.getElementById('admClassNewName').addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') { e.preventDefault(); adminAddClass(); }
+  });
+  var clsTab = document.getElementById('atab-cls');
+  clsTab.addEventListener('input', function () { adminClassesChanged = true; });
+  clsTab.addEventListener('change', function (e) {
+    adminClassesChanged = true;
+    if (e.target.classList.contains('adm-cgrade')) adminChangeClassGrade(e.target.closest('.adm-cls-card'));
+  });
+
   // تنظیمات
   document.getElementById('admPassSave').addEventListener('click', adminChangePass);
 
@@ -3974,6 +4253,7 @@ adminInit();
       TEACHERS.forEach(function (t) { if (t.subject && (!t.role || t.role === 'teacher')) TEACHER_BY_SUBJECT[t.subject] = t.name; });
     }
     if (Array.isArray(d.gallery)) replaceInPlace(GALLERY_ITEMS, d.gallery);
+    if (Array.isArray(d.classes)) replaceInPlace(CLASSES, d.classes);
     if (d.schedules && typeof d.schedules === 'object') {
       CLASSES.forEach(function (cls) { if (Array.isArray(d.schedules[cls.id])) SCHEDULES[cls.id] = d.schedules[cls.id]; });
     }
@@ -3981,6 +4261,7 @@ adminInit();
       CLASSES.forEach(function (cls) { if (Array.isArray(d.schedTeachers[cls.id])) SCHEDULE_TEACHERS[cls.id] = d.schedTeachers[cls.id]; });
     }
 
+    refreshClassSelects();
     renderAnnouncements();
     renderExams((document.getElementById('examFilter') || {}).value || 'all');
     renderScheduleView((document.getElementById('schedSelect') || {}).value || '');
