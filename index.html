@@ -1518,7 +1518,7 @@ section.hero{scroll-margin-top:0}
     <div class="admin-body-inner">
 
       <section class="admin-tab active" id="atab-banner">
-        <div class="adm-note"><svg class="ic" aria-hidden="true"><use href="#i-info"/></svg><span>بنر صفحهٔ اصلی فقط از عکس تشکیل می‌شود؛ هیچ عنوان، متن، دکمه یا لایهٔ رنگی روی آن نمایش داده نمی‌شود — بنر دلخواهتان را طراحی کنید و همین‌جا جای‌گزین کنید. برای هر اسلاید فقط عکس را بارگذاری کنید (تصویر افقی و بزرگ، مثلاً ۱۶۰۰×۹۰۰، بهترین نتیجه را دارد). تا عکس انتخاب نشده باشد، پس‌زمینهٔ سادهٔ آبی دیده می‌شود و ترتیب اسلایدها با دکمه‌های «جابه‌جایی» عوض می‌شود.</span></div>
+        <div class="adm-note"><svg class="ic" aria-hidden="true"><use href="#i-info"/></svg><span>بنر صفحهٔ اصلی فقط از عکس تشکیل می‌شود؛ هیچ عنوان، متن، دکمه یا لایهٔ رنگی روی آن نمایش داده نمی‌شود — بنر دلخواهتان را طراحی کنید و همین‌جا جای‌گزین کنید. عکس با همان کیفیت اصلی ذخیره می‌شود (فقط عکس‌های خیلی بزرگ کمی فشرده می‌شوند)؛ تصویر افقی و بزرگ (پهنای ۱۹۲۰ پیکسل یا بیشتر) بهترین و شارپ‌ترین نتیجه را دارد. اگر عکسِ قبلی بی‌کیفیت شده بود، همان عکس را دوباره بارگذاری و «ذخیره تغییرات» بزنید تا با کیفیت جدید جای‌گزین شود.</span></div>
         <div class="adm-toolbar">
           <div><strong>اسلایدهای بنر صفحه اصلی</strong><span class="adm-count" id="admBannerCount"></span></div>
           <button type="button" class="adm-add" id="admBannerAdd"><svg class="ic" aria-hidden="true"><use href="#i-plus"/></svg>افزودن اسلاید</button>
@@ -3461,7 +3461,7 @@ function adminBannerCard(s, i, total) {
     '<div class="adm-galstrip">' + strip +
     '<button type="button" class="adm-galadd" data-kind="banner" data-up="' + i + '" title="بارگذاری عکس بنر" aria-label="بارگذاری عکس بنر این اسلاید">' + icon('plus') + '<span>' + (s.img ? 'تغییر عکس' : 'بارگذاری عکس') + '</span></button>' +
     '</div>' +
-    '<div class="adm-upname">' + (s.img ? 'عکس این اسلاید روی بنر همان‌طور که هست و بدون هیچ متن یا لایهٔ اضافه نمایش داده می‌شود.' : 'هنوز عکسی برای این اسلاید انتخاب نشده؛ پس از بارگذاری، عکس کامل و تمیز روی بنر نشان داده می‌شود.') + ' تصویر افقی (مثلاً ۱۶۰۰×۹۰۰) بهترین نتیجه را دارد.</div>' +
+    '<div class="adm-upname">' + (s.img ? 'عکس این اسلاید با همان کیفیت اصلی روی بنر و بدون هیچ متن یا لایهٔ اضافه نمایش داده می‌شود.' : 'هنوز عکسی برای این اسلاید انتخاب نشده؛ پس از بارگذاری، عکس کامل و تمیز روی بنر نشان داده می‌شود.') + ' تصویر افقی و بزرگ (پهنای ۱۹۲۰ پیکسل یا بیشتر) بهترین نتیجه را دارد.</div>' +
     '</div>' +
     '<div class="adm-move-row">' +
     '<button type="button" class="adm-move" data-bm="up"' + (i === 0 ? ' disabled' : '') + '>' + icon('up') + 'جابه‌جایی به بالا</button>' +
@@ -3495,23 +3495,38 @@ function adminBannerMove(i, dir) {
   adminDirty = true;
 }
 
-// سقف حجم data-URI هر عکس (~۳۰۰KB): چندین عکس در سهمیهٔ محدود localStorage جا می‌شود
+// سقف حجم data-URI عکس‌های کوچک (پروفایل/گالری/خبر)؛ بنر سقف جدا و بزرگ‌تری دارد
 var ADMIN_IMG_MAX_CHARS = 420000;
+// بنر تمام‌صفحه (Task 58): عکس با کیفیت اصلی و بدون فشرده‌سازی مجدد پذیرفته می‌شود؛
+// سقف فقط برای عکس‌های خیلی بزرگ اعمال می‌شود (~۱٫۲MB دودویی برای هر اسلاید)
+var ADMIN_BANNER_IMG_MAX_CHARS = 1600000;
 
 // خواندن، فشرده‌سازی تدریجی و تبدیل عکس به data-URI (تک‌فایل)
-// اگر خروجی از سقف بزرگ‌تر باشد، ابتدا کیفیت و سپس ابعاد تصویر مرحله‌به‌مرحله
-// کم می‌شود تا به سقف برسد. پس‌زمینهٔ سفید قبل از رسم پر می‌شود تا شفافیت PNG
-// در خروجی JPEG سیاه نشود (مثلاً لوگوی مدرسه).
-function adminReadImage(file, maxDim, cb) {
+// پارامتر دوم می‌تواند عدد باشد (رفتار قدیمی) یا شیء تنظیمات:
+//   {maxDim, maxChars, minDim, qualitySteps}
+// نکتهٔ کیفیت (Task 58): اگر خود فایلِ انتخابی زیر سقف حجم باشد، همان فایل اصلی
+// بدون هیچ فشرده‌سازی مجدد استفاده می‌شود — کیفیت عکس دقیقاً همان عکسی است که
+// انتخاب کرده‌اید (فشرده‌کردن مجدد JPEG همیشه کیفیت را پایین می‌آورد).
+// فقط وقتی عکس بزرگ‌تر از سقف باشد: ابتدا کیفیت و سپس ابعاد مرحله‌به‌مرحله کم می‌شود.
+// پس‌زمینهٔ سفید قبل از رسم پر می‌شود تا شفافیت PNG در خروجی JPEG سیاه نشود.
+function adminReadImage(file, opts, cb) {
+  var cfg = (typeof opts === 'number') ? { maxDim: opts } : (opts || {});
+  var maxDim = cfg.maxDim || 900;
+  var maxChars = cfg.maxChars || ADMIN_IMG_MAX_CHARS;
+  var minDim = cfg.minDim || 480;
+  var qualitySteps = cfg.qualitySteps || [0.82, 0.72, 0.62, 0.52];
   if (!file.type || file.type.indexOf('image/') !== 0) {
     showToast('فقط فایل تصویری قابل آپلود است.'); return;
   }
   var reader = new FileReader();
   reader.onload = function () {
+    var raw = reader.result;
     var img = new Image();
     img.onload = function () {
-      var dim = maxDim, quality = 0.82, degraded = false, data = '';
-      var qualitySteps = [0.82, 0.72, 0.62, 0.52];
+      // عبور بدون فشرده‌سازی: فایل اصلی هم زیر سقف حجم است و هم ابعاد معقولی دارد
+      var tooBigDims = Math.max(img.naturalWidth, img.naturalHeight) > Math.round(maxDim * 1.5);
+      if (raw.length <= maxChars && !tooBigDims) { cb(raw); return; } // کیفیت اصلی عکس حفظ می‌شود
+      var dim = maxDim, quality = qualitySteps[0], degraded = true, data = '';
       var qi = 0;
       while (true) {
         var k = Math.min(1, dim / Math.max(img.naturalWidth, img.naturalHeight));
@@ -3524,21 +3539,21 @@ function adminReadImage(file, maxDim, cb) {
         ctx.drawImage(img, 0, 0, cv.width, cv.height);
         data = '';
         try { data = cv.toDataURL('image/jpeg', quality); } catch (err) { data = ''; }
-        if (data && data.length >= 64 && data.length <= ADMIN_IMG_MAX_CHARS) break; // در سقف جا شد
+        if (data && data.length >= 64 && data.length <= maxChars) break; // در سقف جا شد
         degraded = true;
         if (qi < qualitySteps.length - 1) { quality = qualitySteps[++qi]; } // اول: کیفیت پایین‌تر
-        else if (dim > 480) { dim = Math.max(480, Math.round(dim * 0.8)); } // بعد: ابعاد کوچک‌تر
+        else if (dim > minDim) { dim = Math.max(minDim, Math.round(dim * 0.8)); } // بعد: ابعاد کوچک‌تر
         else break; // کف فشرده‌سازی؛ ادامه نیست
       }
       if (!data || data.length < 64) { showToast('خواندن این تصویر ممکن نشد.'); return; }
-      if (data.length > ADMIN_IMG_MAX_CHARS) {
+      if (data.length > maxChars) {
         showToast('تصویر حتی پس از فشرده‌سازی بزرگ است؛ لطفاً عکس کوچک‌تری انتخاب کنید.'); return;
       }
-      if (degraded) showToast('برای جا شدن در حافظهٔ مرورگر، کیفیت/ابعاد تصویر کمی کاهش یافت.');
+      if (degraded) showToast('برای جا شدن در حافظه، ابعاد/کیفیت عکس کمی کاهش یافت.');
       cb(data);
     };
     img.onerror = function () { showToast('این فایل تصویر معتبر نیست.'); };
-    img.src = reader.result;
+    img.src = raw;
   };
   reader.readAsDataURL(file);
 }
@@ -4349,8 +4364,20 @@ function adminInit() {
     var f = this.files && this.files[0];
     this.value = '';
     if (!f || !adminUploadJob.kind) return;
-    var maxDim = adminUploadJob.kind === 'staff' ? 480 : (adminUploadJob.kind === 'banner' ? 1400 : 900);
-    adminReadImage(f, maxDim, adminApplyUpload);
+    var opts;
+    if (adminUploadJob.kind === 'banner') {
+      // بنر تمام‌صفحه (Task 58): کیفیت بالا و ابعاد بزرگ تا تصویر روی همهٔ
+      // نمایشگرها شارپ بماند؛ اگر عکس اصلی زیر سقف باشد دست‌نخورده ذخیره می‌شود
+      opts = {
+        maxDim: 2560,
+        maxChars: ADMIN_BANNER_IMG_MAX_CHARS,
+        minDim: 1200,
+        qualitySteps: [0.92, 0.84, 0.76]
+      };
+    } else {
+      opts = adminUploadJob.kind === 'staff' ? 480 : 900;
+    }
+    adminReadImage(f, opts, adminApplyUpload);
   });
 
   // انتخاب کلاس در تب برنامه کلاسی (اول ویرایش‌ها ذخیره شوند تا از بین نروند)
