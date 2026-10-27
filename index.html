@@ -1408,7 +1408,7 @@ section.hero{scroll-margin-top:0}
   </section>
 
   <!-- ============================================================
-       بخش گالری (۶ مجموعهٔ اول در صفحهٔ اصلی — دکمهٔ «مشاهده همه»)
+       بخش گالری (۲ مجموعهٔ اول در صفحهٔ اصلی — دکمهٔ «مشاهده همه»)
        ============================================================ -->
   <section class="section" id="gallery">
     <div class="container">
@@ -2453,8 +2453,8 @@ function renderScheduleView(classId) {
     scheduleTableHTML(classId);
 }
 
-/* ---------- اطلاعیه‌ها (صفحهٔ اصلی فقط ۶ خبر؛ بقیه در صفحهٔ «مشاهده همه») ---------- */
-var ANN_PAGE = 6;   // حداکثر خبرهای صفحهٔ اصلی؛ بیشتر از آن با دکمهٔ «مشاهده همه» در صفحهٔ کامل دیده می‌شود
+/* ---------- اطلاعیه‌ها (صفحهٔ اصلی فقط ۳ خبر؛ بقیه در صفحهٔ «مشاهده همه») ---------- */
+var ANN_PAGE = 3;   // حداکثر خبرهای صفحهٔ اصلی؛ بیشتر از آن با دکمهٔ «مشاهده همه» در صفحهٔ کامل دیده می‌شود
 
 function annItemHtml(a, i) {
   var src = annCardSrc(a);
@@ -2476,7 +2476,7 @@ function updateAnnMore() {
   var total = ANNOUNCEMENTS.length;
   var box = document.getElementById('annMore');
   if (!box) return;
-  // صفحهٔ اصلی فقط ۶ خبر دارد؛ دکمهٔ «مشاهده همه» فقط وقتی هست که خبر بیشتری موجود باشد
+  // صفحهٔ اصلی فقط ۳ خبر دارد؛ دکمهٔ «مشاهده همه» فقط وقتی هست که خبر بیشتری موجود باشد
   if (total <= ANN_PAGE) { box.hidden = true; return; }
   box.hidden = false;
 }
@@ -2523,7 +2523,7 @@ function renderAnnouncements() {
     if (box0) box0.hidden = true;
     return;
   }
-  // صفحهٔ اصلی فقط ۶ خبر اول (جدیدترین‌ها) را نشان می‌دهد — بقیه در صفحهٔ «مشاهده همه»
+  // صفحهٔ اصلی فقط ۳ خبر اول (جدیدترین‌ها) را نشان می‌دهد — بقیه در صفحهٔ «مشاهده همه»
   var shown = Math.min(ANN_PAGE, items.length);
   var html = '';
   for (var i = 0; i < shown; i++) html += annItemHtml(items[i], i);
@@ -2691,9 +2691,9 @@ function galPhotos(g) {
   if (g.photos && g.photos.length) return g.photos;
   return g.photo ? [g.photo] : [];
 }
-// نمایش گالری در صفحهٔ اصلی: فقط ۶ مجموعهٔ اول؛ بقیه با دکمهٔ «مشاهده همه»
+// نمایش گالری در صفحهٔ اصلی: فقط ۲ مجموعهٔ اول؛ بقیه با دکمهٔ «مشاهده همه»
 // در صفحهٔ کامل گالری دیده می‌شوند (بدون جستجو — درخواست مدیر).
-var GALLERY_PAGE = 6;    // حداکثر مجموعه‌های صفحهٔ اصلی؛ بیشتر از آن دکمهٔ «مشاهده همه» نمایش داده می‌شود
+var GALLERY_PAGE = 2;    // حداکثر مجموعه‌های صفحهٔ اصلی؛ بیشتر از آن دکمهٔ «مشاهده همه» نمایش داده می‌شود
 
 function galleryItemHtml(g, i) {
   var ph = galPhotos(g);
@@ -2713,7 +2713,7 @@ function updateGalleryMore() {
   var total = GALLERY_ITEMS.length;
   var box = document.getElementById('galleryMore');
   if (!box) return;
-  // صفحهٔ اصلی فقط ۶ مجموعه دارد؛ دکمهٔ «مشاهده همه» فقط وقتی هست که مجموعهٔ بیشتری موجود باشد
+  // صفحهٔ اصلی فقط ۲ مجموعه دارد؛ دکمهٔ «مشاهده همه» فقط وقتی هست که مجموعهٔ بیشتری موجود باشد
   if (total <= GALLERY_PAGE) { box.hidden = true; return; }
   box.hidden = false;
 }
@@ -2727,7 +2727,7 @@ function renderGallery() {
     updateGalleryMore();
     return;
   }
-  // صفحهٔ اصلی فقط ۶ مجموعهٔ اول را نشان می‌دهد — بقیه در صفحهٔ «مشاهده همه»
+  // صفحهٔ اصلی فقط ۲ مجموعهٔ اول را نشان می‌دهد — بقیه در صفحهٔ «مشاهده همه»
   var html = '';
   for (var i = 0; i < Math.min(GALLERY_PAGE, GALLERY_ITEMS.length); i++) html += galleryItemHtml(GALLERY_ITEMS[i], i);
   grid.innerHTML = html;
@@ -2990,9 +2990,25 @@ function init() {
   document.getElementById('menuToggle').addEventListener('click', toggleMenu);
   document.getElementById('menuOverlay').addEventListener('click', closeMenu);
 
-  // بستن منو با کلیک روی لینک‌های منوی موبایل
+  /* ----- هدر: کلیک روی «اخبار» یا «گالری» → صفحهٔ کامل همان بخش (نه اسکرول به بخش صفحهٔ اصلی) ----- */
+  function navLinkOpensPage(a) {
+    var href = a.getAttribute('href');
+    if (href === '#announcements') { openAnnAllPage(); return true; }
+    if (href === '#gallery') { openGalleryAllPage(); return true; }
+    return false;
+  }
+  // بستن منو با کلیک روی لینک‌های منوی موبایل؛ «اخبار»/«گالری» صفحهٔ کامل را باز می‌کنند
   document.querySelectorAll('#menuPanel a').forEach(function (a) {
-    a.addEventListener('click', closeMenu);
+    a.addEventListener('click', function (e) {
+      if (navLinkOpensPage(a)) e.preventDefault();
+      closeMenu();
+    });
+  });
+  // دسکتاپ: نوار وسط هدر — «اخبار»/«گالری» صفحهٔ کامل همان بخش را باز می‌کند
+  document.querySelectorAll('.main-nav a').forEach(function (a) {
+    a.addEventListener('click', function (e) {
+      if (navLinkOpensPage(a)) e.preventDefault();
+    });
   });
 
   /* ----- فیلترها و انتخاب‌ها ----- */
