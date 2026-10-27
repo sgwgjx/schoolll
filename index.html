@@ -1518,7 +1518,7 @@ section.hero{scroll-margin-top:0}
     <div class="admin-body-inner">
 
       <section class="admin-tab active" id="atab-banner">
-        <div class="adm-note"><svg class="ic" aria-hidden="true"><use href="#i-info"/></svg><span>بنر صفحهٔ اصلی فقط از عکس تشکیل می‌شود؛ هیچ عنوان، متن، دکمه یا لایهٔ رنگی روی آن نمایش داده نمی‌شود — بنر دلخواهتان را طراحی کنید و همین‌جا جای‌گزین کنید. عکس با همان کیفیت اصلی ذخیره می‌شود (فقط عکس‌های خیلی بزرگ کمی فشرده می‌شوند)؛ تصویر افقی و بزرگ (پهنای ۱۹۲۰ پیکسل یا بیشتر) بهترین و شارپ‌ترین نتیجه را دارد. اگر عکسِ قبلی بی‌کیفیت شده بود، همان عکس را دوباره بارگذاری و «ذخیره تغییرات» بزنید تا با کیفیت جدید جای‌گزین شود.</span></div>
+        <div class="adm-note"><svg class="ic" aria-hidden="true"><use href="#i-info"/></svg><span>بنر صفحهٔ اصلی فقط از عکس تشکیل می‌شود؛ هیچ عنوان، متن، دکمه یا لایهٔ رنگی روی آن نمایش داده نمی‌شود. عکس دقیقاً با همان کیفیت اصلی و بدون هیچ فشرده‌سازی ذخیره می‌شود (تا ~۳ مگابایت در هر اسلاید). برای هر اسلاید: «افزودن اسلاید» را بزنید، سپس روی «بارگذاری عکس» همان اسلاید کلیک کنید و در پایان «ذخیره تغییرات» را بزنید. اگر عکسِ فعلی بنر از نسخهٔ قبلی فشرده شده، همان عکس اصلی را یک بار دیگر بارگذاری و ذخیره کنید تا با کیفیت کامل جایگزین شود.</span></div>
         <div class="adm-toolbar">
           <div><strong>اسلایدهای بنر صفحه اصلی</strong><span class="adm-count" id="admBannerCount"></span></div>
           <button type="button" class="adm-add" id="admBannerAdd"><svg class="ic" aria-hidden="true"><use href="#i-plus"/></svg>افزودن اسلاید</button>
@@ -3461,7 +3461,7 @@ function adminBannerCard(s, i, total) {
     '<div class="adm-galstrip">' + strip +
     '<button type="button" class="adm-galadd" data-kind="banner" data-up="' + i + '" title="بارگذاری عکس بنر" aria-label="بارگذاری عکس بنر این اسلاید">' + icon('plus') + '<span>' + (s.img ? 'تغییر عکس' : 'بارگذاری عکس') + '</span></button>' +
     '</div>' +
-    '<div class="adm-upname">' + (s.img ? 'عکس این اسلاید با همان کیفیت اصلی روی بنر و بدون هیچ متن یا لایهٔ اضافه نمایش داده می‌شود.' : 'هنوز عکسی برای این اسلاید انتخاب نشده؛ پس از بارگذاری، عکس کامل و تمیز روی بنر نشان داده می‌شود.') + ' تصویر افقی و بزرگ (پهنای ۱۹۲۰ پیکسل یا بیشتر) بهترین نتیجه را دارد.</div>' +
+    '<div class="adm-upname">' + (s.img ? 'عکس این اسلاید با همان کیفیت اصلی (بدون فشرده‌سازی) روی بنر نمایش داده می‌شود.' : 'عکس این اسلاید را بارگذاری کنید؛ عکس با همان کیفیت اصلی و بدون فشرده‌سازی ذخیره می‌شود (حداکثر ~۳ مگابایت).') + '</div>' +
     '</div>' +
     '<div class="adm-move-row">' +
     '<button type="button" class="adm-move" data-bm="up"' + (i === 0 ? ' disabled' : '') + '>' + icon('up') + 'جابه‌جایی به بالا</button>' +
@@ -3479,6 +3479,8 @@ function adminRenderBannerList() {
 function adminCollectBanner() {
   // اسلایدهای بنر فقط «عکس» دارند؛ فیلد متنی‌ای برای جمع‌آوری وجود ندارد.
   // فقط فیلدهای متنی قدیمی (title/sub/btn/link) پاک می‌شوند تا دادهٔ ذخیره‌شده سبک بماند.
+  // (Task 59) اگر پنل در میانهٔ کار قفل/بسته شده باشد، به‌جای خطای خاموش بی‌کاری می‌کنیم.
+  if (!ADMIN_WORK || !Array.isArray(ADMIN_WORK.banner)) return;
   ADMIN_WORK.banner.forEach(function (s) {
     if (s) { delete s.title; delete s.sub; delete s.btn; delete s.link; }
   });
@@ -3495,19 +3497,21 @@ function adminBannerMove(i, dir) {
   adminDirty = true;
 }
 
-// سقف حجم data-URI عکس‌های کوچک (پروفایل/گالری/خبر)؛ بنر سقف جدا و بزرگ‌تری دارد
+// سقف حجم data-URI عکس‌های کوچک (پروفایل/گالری/خبر)
 var ADMIN_IMG_MAX_CHARS = 420000;
-// بنر تمام‌صفحه (Task 58): عکس با کیفیت اصلی و بدون فشرده‌سازی مجدد پذیرفته می‌شود؛
-// سقف فقط برای عکس‌های خیلی بزرگ اعمال می‌شود (~۱٫۲MB دودویی برای هر اسلاید)
-var ADMIN_BANNER_IMG_MAX_CHARS = 1600000;
+// بنر تمام‌صفحه (Task 59): هیچ فشرده‌سازی انجام نمی‌شود؛ عکس اصلی بایت‌به‌بایت ذخیره می‌شود.
+// سقف فقط برای جا شدن در بدنهٔ ذخیره روی سرور است (~۲٫۸MB دودویی برای هر اسلاید).
+var ADMIN_BANNER_IMG_MAX_CHARS = 3800000;
+// (Task 59) سقف کل بدنهٔ دادهٔ ذخیره‌شده (کاراکتر data-URI)؛ درخواست‌های بزرگ‌تر سرور را جا نمی‌شود
+var ADMIN_SAVE_MAX_CHARS = 4400000;
 
 // خواندن، فشرده‌سازی تدریجی و تبدیل عکس به data-URI (تک‌فایل)
 // پارامتر دوم می‌تواند عدد باشد (رفتار قدیمی) یا شیء تنظیمات:
-//   {maxDim, maxChars, minDim, qualitySteps}
-// نکتهٔ کیفیت (Task 58): اگر خود فایلِ انتخابی زیر سقف حجم باشد، همان فایل اصلی
-// بدون هیچ فشرده‌سازی مجدد استفاده می‌شود — کیفیت عکس دقیقاً همان عکسی است که
-// انتخاب کرده‌اید (فشرده‌کردن مجدد JPEG همیشه کیفیت را پایین می‌آورد).
-// فقط وقتی عکس بزرگ‌تر از سقف باشد: ابتدا کیفیت و سپس ابعاد مرحله‌به‌مرحله کم می‌شود.
+//   {raw:true, maxChars}          → حالت بنر (Task 59): عکس اصلی بدون هیچ
+//                                   تغییر ابعاد/کیفیت/فرمت بایت‌به‌بایت ذخیره می‌شود.
+//   {maxDim, maxChars, minDim, qualitySteps} → حالت عکس‌های کوچک (خبر/گالری/پروفایل):
+//                                   اگر فایل اصلی زیر سقف باشد دست‌نخورده عبور می‌کند؛
+//                                   فقط عکس‌های بزرگ پله‌پله فشرده می‌شوند.
 // پس‌زمینهٔ سفید قبل از رسم پر می‌شود تا شفافیت PNG در خروجی JPEG سیاه نشود.
 function adminReadImage(file, opts, cb) {
   var cfg = (typeof opts === 'number') ? { maxDim: opts } : (opts || {});
@@ -3523,6 +3527,14 @@ function adminReadImage(file, opts, cb) {
     var raw = reader.result;
     var img = new Image();
     img.onload = function () {
+      // حالت بنر (Task 59): بدون فشرده‌سازی — عکس اصلی همان‌طور که هست ذخیره می‌شود
+      if (cfg.raw) {
+        if (raw.length > maxChars) {
+          showToast('این عکس ' + toFa((raw.length * 3 / 4 / 1048576).toFixed(1)) + ' مگابایت است؛ حداکثر ' + toFa(Math.round(maxChars * 3 / 4 / 1048576)) + ' مگابایت عکس بنر پذیرفته می‌شود. لطفاً نسخهٔ سبک‌تر همین عکس را انتخاب کنید — ذخیره بدون افت کیفیت انجام می‌شود.');
+          return;
+        }
+        cb(raw); return; // کیفیت و فرمت عکس دقیقاً همان فایل اصلی است
+      }
       // عبور بدون فشرده‌سازی: فایل اصلی هم زیر سقف حجم است و هم ابعاد معقولی دارد
       var tooBigDims = Math.max(img.naturalWidth, img.naturalHeight) > Math.round(maxDim * 1.5);
       if (raw.length <= maxChars && !tooBigDims) { cb(raw); return; } // کیفیت اصلی عکس حفظ می‌شود
@@ -3560,6 +3572,8 @@ function adminReadImage(file, opts, cb) {
 
 // اعمال عکس آپلودشده روی داده کاری + بازرندر همان زبانه
 function adminApplyUpload(data) {
+  // (Task 59) اگر پنل در میانهٔ انتخاب فایل قفل/بسته شده باشد، به‌جای خطای خاموش پیام روشن می‌دهیم
+  if (!ADMIN_WORK) { showToast('پنل بسته یا قفل شده است؛ دوباره باز کنید و عکس را بارگذاری کنید.'); return; }
   var j = adminUploadJob;
   if (j.kind === 'ann') {
     adminCollectAnn();
@@ -3594,6 +3608,7 @@ function adminApplyUpload(data) {
     adminRenderGallery();
     showToast('عکس به مجموعه افزوده شد؛ با «ذخیره تغییرات» روی سایت نمایش داده می‌شود.');
   } else return;
+  adminUploadJob = { kind: '', idx: -1 }; // (Task 59) کار آپلود تمام شد؛ کارکردهای کهنه پاک شود
   adminDirty = true;
 }
 
@@ -4037,6 +4052,25 @@ function adminSaveAll() {
     }
   }
 
+  // (Task 59) پیش‌بررسی حجم بدنهٔ ذخیره: سرور درخواست‌های خیلی بزرگ را نمی‌پذیرد.
+  // اگر مجموع داده‌ها (بیشترین سهم: عکس‌های بنر) از سقف بگذرد، ذخیره با پیام روشن
+  // متوقف می‌شود تا مدیر بداند دقیقاً چه چیزی را سبک‌تر کند — به‌جای خطای مبهم شبکه.
+  var _probe = adminDeepCopy(SchoolDB.readAll() || {});
+  _probe.banner = ADMIN_WORK.banner;
+  _probe.announcements = ADMIN_WORK.ann;
+  _probe.schedules = ADMIN_WORK.sched;
+  _probe.schedTeachers = ADMIN_WORK.schedTeachers;
+  _probe.exams = ADMIN_WORK.exams;
+  _probe.teachers = ADMIN_WORK.teachers;
+  _probe.gallery = ADMIN_WORK.gallery;
+  _probe.classes = ADMIN_WORK.classes;
+  _probe.savedAt = new Date().toISOString();
+  var _chars = JSON.stringify(_probe).length;
+  if (_chars > ADMIN_SAVE_MAX_CHARS) {
+    showToast('مجموع داده‌ها برای ذخیره روی سرور بزرگ است (~' + toFa(Math.round(_chars * 3 / 4 / 1048576)) + ' مگابایت). عکس‌های بنر را سبک‌تر کنید (هر اسلاید حداکثر ~۳ مگابایت) یا تعداد اسلایدهای سنگین را کمتر کنید.');
+    return;
+  }
+
   // کلاس‌ها: اعمال روی فهرست زنده؛ نام کلاسِ ثبت‌شده در آزمون‌ها هم با نام جدید هماهنگ می‌شود
   CLASSES.length = 0;
   ADMIN_WORK.classes.forEach(function (c) { CLASSES.push(adminDeepCopy(c)); });
@@ -4168,15 +4202,16 @@ function adminInit() {
   // ذخیره
   document.getElementById('adminSaveBtn').addEventListener('click', adminSaveAll);
 
-  // افزودن اسلاید بنر صفحه اصلی (بلافاصله انتخابگر عکس باز می‌شود تا عکس را انتخاب کنید)
+  // افزودن اسلاید بنر صفحه اصلی (Task 59: اسلاید بلافاصله ساخته و دیده می‌شود؛
+  // بدون بازکردن خودکارِ انتخابگر فایل که در برخی مرورگرها اسلایدهای بعدی را خراب می‌کرد.
+  // عکس هر اسلاید با دکمهٔ «بارگذاری عکس» روی همان کارت انتخاب می‌شود.)
   document.getElementById('admBannerAdd').addEventListener('click', function () {
     adminCollectBanner();
     ADMIN_WORK.banner.unshift({ img: '' });
     adminRenderBannerList();
     adminScrollTop();
     adminDirty = true;
-    adminUploadJob = { kind: 'banner', idx: 0 };
-    document.getElementById('admImgFile').click();
+    showToast('اسلاید خالی افزوده شد؛ حالا روی دکمهٔ «بارگذاری عکس» در همان اسلاید کلیک کنید و در پایان «ذخیره تغییرات» را بزنید.');
   });
 
   // افزودن اطلاعیه
@@ -4366,14 +4401,8 @@ function adminInit() {
     if (!f || !adminUploadJob.kind) return;
     var opts;
     if (adminUploadJob.kind === 'banner') {
-      // بنر تمام‌صفحه (Task 58): کیفیت بالا و ابعاد بزرگ تا تصویر روی همهٔ
-      // نمایشگرها شارپ بماند؛ اگر عکس اصلی زیر سقف باشد دست‌نخورده ذخیره می‌شود
-      opts = {
-        maxDim: 2560,
-        maxChars: ADMIN_BANNER_IMG_MAX_CHARS,
-        minDim: 1200,
-        qualitySteps: [0.92, 0.84, 0.76]
-      };
+      // بنر تمام‌صفحه (Task 59): عکس اصلی بدون هیچ فشرده‌سازی و تغییر ابعادی ذخیره می‌شود
+      opts = { raw: true, maxChars: ADMIN_BANNER_IMG_MAX_CHARS };
     } else {
       opts = adminUploadJob.kind === 'staff' ? 480 : 900;
     }
