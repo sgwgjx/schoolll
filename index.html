@@ -1008,6 +1008,11 @@ textarea.adm-in{resize:vertical;line-height:1.8}
 #admBannerList .adm-blabel{flex:1;min-width:0;font-weight:800;color:var(--primary);font-size:.92rem}
 #admBannerList .adm-galph{width:150px;height:84px}
 #admBannerList .adm-galadd{width:150px;height:84px;font-size:.72rem}
+/* (Task 60) نشان کیفیت عکس بنر: سبز = مناسب کامپیوتر، زرد = قابل قبول، سرخ = برای کامپیوتر کوچک است */
+#admBannerList .adm-bq{margin-top:7px;padding:7px 10px;border-radius:8px;font-size:.75rem;font-weight:700;line-height:1.8;text-align:center}
+#admBannerList .adm-bq-ok{background:#e8f6ed;color:#1e7d3c;border:1px solid #bfe3cc}
+#admBannerList .adm-bq-mid{background:#fdf6e0;color:#8a621a;border:1px solid #f0e2b0}
+#admBannerList .adm-bq-low{background:#fdecea;color:#b3261e;border:1px solid #f3c6c2}
 .adm-banx{position:absolute;top:4px;inset-inline-end:4px;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;padding:0;border:none;background:rgba(192,39,51,.92);color:#fff;cursor:pointer}
 .adm-banx .ic{width:11px;height:11px}
 .adm-banx:hover{background:#c02733}
@@ -1518,7 +1523,7 @@ section.hero{scroll-margin-top:0}
     <div class="admin-body-inner">
 
       <section class="admin-tab active" id="atab-banner">
-        <div class="adm-note"><svg class="ic" aria-hidden="true"><use href="#i-info"/></svg><span>بنر صفحهٔ اصلی فقط از عکس تشکیل می‌شود؛ هیچ عنوان، متن، دکمه یا لایهٔ رنگی روی آن نمایش داده نمی‌شود. عکس دقیقاً با همان کیفیت اصلی و بدون هیچ فشرده‌سازی ذخیره می‌شود (تا ~۳ مگابایت در هر اسلاید). برای هر اسلاید: «افزودن اسلاید» را بزنید، سپس روی «بارگذاری عکس» همان اسلاید کلیک کنید و در پایان «ذخیره تغییرات» را بزنید. اگر عکسِ فعلی بنر از نسخهٔ قبلی فشرده شده، همان عکس اصلی را یک بار دیگر بارگذاری و ذخیره کنید تا با کیفیت کامل جایگزین شود.</span></div>
+        <div class="adm-note"><svg class="ic" aria-hidden="true"><use href="#i-info"/></svg><span>بنر صفحهٔ اصلی فقط از عکس تشکیل می‌شود؛ هیچ عنوان، متن، دکمه یا لایهٔ رنگی روی آن نمایش داده نمی‌شود. عکس دقیقاً با همان کیفیت اصلی و بدون هیچ فشرده‌سازی ذخیره می‌شود (تا ~۳ مگابایت در هر اسلاید). مهم: روی موبایل تقریباً هر عکسی خوب دیده می‌شود، اما روی مانیتور کامپیوتر عکس باید به‌اندازهٔ کافی بزرگ باشد؛ برای کیفیت عالی، عکس افقی با عرض ۱۹۲۰ پیکسل یا بیشتر (ایده‌آل ۲۰۰۰ تا ۴۰۰۰) بارگذاری کنید و همیشه از فایل اصلی عکس استفاده کنید — عکس‌های دانلودشده از واتساپ/تلگرام یا از اینترنت معمولاً کوچک و کم‌کیفیت‌اند. زیر هر اسلاید، ابعاد، حجم و «نشان کیفیت» عکس ذخیره‌شده نمایش داده می‌شود تا از مناسب بودن عکس مطمئن شوید. برای هر اسلاید: «افزودن اسلاید» را بزنید، سپس روی «بارگذاری عکس» همان اسلاید کلیک کنید و در پایان «ذخیره تغییرات» را بزنید. اگر عکسِ فعلی بنر از نسخهٔ قبلی فشرده شده، همان عکس اصلی را یک بار دیگر بارگذاری و ذخیره کنید تا با کیفیت کامل جایگزین شود.</span></div>
         <div class="adm-toolbar">
           <div><strong>اسلایدهای بنر صفحه اصلی</strong><span class="adm-count" id="admBannerCount"></span></div>
           <button type="button" class="adm-add" id="admBannerAdd"><svg class="ic" aria-hidden="true"><use href="#i-plus"/></svg>افزودن اسلاید</button>
@@ -2600,7 +2605,8 @@ function showToast(msg) {
   t.textContent = msg;
   t.classList.add('show');
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(function () { t.classList.remove('show'); }, 3400);
+  // (Task 60) هشدارهای بلند (مثل کیفیت عکس بنر) زمان بیشتری برای خواندن می‌گیرند
+  toastTimer = setTimeout(function () { t.classList.remove('show'); }, (msg && msg.length > 80) ? 9000 : 3400);
 }
 
 /* ---------- لایت‌باکس گالری (نمایش یک مجموعه + ورق‌زدن تصاویر) ---------- */
@@ -3444,12 +3450,70 @@ var adminUploadJob = { kind: '', idx: -1 };
 
 /* ---------- تب بنر صفحه اصلی ---------- */
 // بنر فقط عکس است؛ کارت هر اسلاید: پیش‌نمایش، بارگذاری/تغییر عکس، حذف عکس، جابه‌جایی و حذف اسلاید
+/* (Task 60) خواندن ابعاد (پیکسل) و حجم عکسِ data-URI بنر برای «نشان کیفیت».
+   PNG/GIF از روی هدر و JPEG با پیدا کردن نشانگر SOF به‌صورت همگام خوانده می‌شوند؛
+   فرمت‌های دیگر فقط حجم را نشان می‌دهند. این بررسی فقط اطلاع‌رسانی است؛
+   ذخیره‌سازی همچنان بدون هیچ فشرده‌سازی انجام می‌شود. */
+function adminBannerImgInfo(dataUri) {
+  var out = { w: 0, h: 0, kb: 0, known: false };
+  if (!dataUri || typeof dataUri !== 'string' || dataUri.indexOf('data:image') !== 0) return out;
+  out.kb = Math.round(dataUri.length * 3 / 4 / 1024);
+  try {
+    var bin = atob(dataUri.slice(dataUri.indexOf(',') + 1));
+    var n = bin.length;
+    if (n > 24 && bin.charCodeAt(0) === 137 && bin.charCodeAt(1) === 80) { // PNG → IHDR
+      out.w = (bin.charCodeAt(16) << 24 | bin.charCodeAt(17) << 16 | bin.charCodeAt(18) << 8 | bin.charCodeAt(19)) >>> 0;
+      out.h = (bin.charCodeAt(20) << 24 | bin.charCodeAt(21) << 16 | bin.charCodeAt(22) << 8 | bin.charCodeAt(23)) >>> 0;
+    } else if (n > 10 && bin.slice(0, 3) === 'GIF') {
+      out.w = bin.charCodeAt(6) | bin.charCodeAt(7) << 8;
+      out.h = bin.charCodeAt(8) | bin.charCodeAt(9) << 8;
+    } else if (n > 4 && bin.charCodeAt(0) === 255 && bin.charCodeAt(1) === 216) { // JPEG → SOF
+      var i = 2;
+      while (i + 9 < n) {
+        if (bin.charCodeAt(i) !== 255) { i++; continue; }
+        var m = bin.charCodeAt(i + 1);
+        if (m >= 192 && m <= 207 && m !== 196 && m !== 200 && m !== 204) { // SOF0..SOF15 (بدون DHT/JPG/DAC)
+          out.h = bin.charCodeAt(i + 5) << 8 | bin.charCodeAt(i + 6);
+          out.w = bin.charCodeAt(i + 7) << 8 | bin.charCodeAt(i + 8);
+          break;
+        }
+        if (m === 1 || (m >= 208 && m <= 215)) { i += 2; continue; } // نشانگرهای بدون طول
+        i += 2 + (bin.charCodeAt(i + 2) << 8 | bin.charCodeAt(i + 3)); // پرش از روی قطعه
+      }
+    }
+  } catch (e) {}
+  out.known = !!(out.w && out.h);
+  return out;
+}
+// (Task 60) نسبت بزرگ‌شدن عکس روی بزرگ‌ترین بنر دسکتاپ (۱۹۲۰×۷۲۰) با background-size:cover
+function adminBannerPcScale(q) {
+  if (!q || !q.known) return 1;
+  return Math.max(1920 / q.w, 720 / q.h);
+}
 function adminBannerCard(s, i, total) {
   var src = s.img || placeholderImg('', 'image', '#123257', '#2f7ec3', true);
   var strip = s.img
     ? '<span class="adm-galph"><img src="' + s.img + '" alt="">' +
       '<button type="button" class="adm-banx" data-up="' + i + '" title="حذف عکس این اسلاید" aria-label="حذف عکس این اسلاید">' + icon('x') + '</button></span>'
     : '';
+  // (Task 60) نشان کیفیت: ابعاد/حجم عکس ذخیره‌شده + وضعیت نمایش روی مانیتور کامپیوتر
+  var qBadge = '';
+  if (s.img) {
+    var q = adminBannerImgInfo(s.img), pc = adminBannerPcScale(q), qTxt = '', qCls = 'ok';
+    if (!q.known) {
+      qCls = 'mid';
+      qTxt = 'ابعاد این عکس قابل تشخیص نیست؛ اگر روی کامپیوتر بی‌کیفیت دیده شد، عکس بزرگ‌تر (عرض ۱۹۲۰ پیکسل یا بیشتر) بارگذاری کنید.';
+    } else if (pc <= 1.001) {
+      qTxt = 'کیفیت عالی؛ این عکس روی مانیتور کامپیوتر هم تیز و بدون کش‌شدگی نمایش داده می‌شود.';
+    } else if (pc <= 1.15) {
+      qCls = 'mid';
+      qTxt = 'قابل قبول؛ حدود ' + toFa(pc.toFixed(1)) + ' برابر روی کامپیوتر بزرگ می‌شود. عکس بزرگ‌تر (عرض ۱۹۲۰ پیکسل یا بیشتر) نتیجهٔ بهتری می‌دهد.';
+    } else {
+      qCls = 'low';
+      qTxt = 'روی موبایل خوب دیده می‌شود، اما روی مانیتور کامپیوتر حدود ' + toFa(pc.toFixed(1)) + ' برابر کش می‌آید و بی‌کیفیت می‌شود؛ عکس اصلی با عرض ۱۹۲۰ پیکسل یا بیشتر (ایده‌آل ۲۰۰۰ تا ۴۰۰۰) بارگذاری کنید.';
+    }
+    qBadge = '<div class="adm-bq adm-bq-' + qCls + '">ابعاد: ' + (q.known ? toFa(q.w) + '×' + toFa(q.h) + ' پیکسل' : 'نامعلوم') + ' • حجم: ~' + toFa(q.kb) + ' کیلوبایت — ' + qTxt + '</div>';
+  }
   return (
     '<div class="adm-card" data-i="' + i + '">' +
     '<div class="adm-card-head">' +
@@ -3461,7 +3525,8 @@ function adminBannerCard(s, i, total) {
     '<div class="adm-galstrip">' + strip +
     '<button type="button" class="adm-galadd" data-kind="banner" data-up="' + i + '" title="بارگذاری عکس بنر" aria-label="بارگذاری عکس بنر این اسلاید">' + icon('plus') + '<span>' + (s.img ? 'تغییر عکس' : 'بارگذاری عکس') + '</span></button>' +
     '</div>' +
-    '<div class="adm-upname">' + (s.img ? 'عکس این اسلاید با همان کیفیت اصلی (بدون فشرده‌سازی) روی بنر نمایش داده می‌شود.' : 'عکس این اسلاید را بارگذاری کنید؛ عکس با همان کیفیت اصلی و بدون فشرده‌سازی ذخیره می‌شود (حداکثر ~۳ مگابایت).') + '</div>' +
+    '<div class="adm-upname">' + (s.img ? 'عکس با همان کیفیت اصلی و بدون فشرده‌سازی ذخیره شده است؛ نشان کیفیت زیر، وضعیت نمایش روی کامپیوتر را نشان می‌دهد.' : 'عکس افقی با عرض ۱۹۲۰ پیکسل یا بیشتر بهترین نتیجه را روی کامپیوتر می‌دهد؛ ذخیره بدون فشرده‌سازی (تا ~۳ مگابایت).') + '</div>' +
+    qBadge +
     '</div>' +
     '<div class="adm-move-row">' +
     '<button type="button" class="adm-move" data-bm="up"' + (i === 0 ? ' disabled' : '') + '>' + icon('up') + 'جابه‌جایی به بالا</button>' +
@@ -3591,7 +3656,13 @@ function adminApplyUpload(data) {
     if (!bs) return;
     bs.img = data; // هر اسلاید فقط یک عکس دارد؛ عکس تازه جایگزین می‌شود
     adminRenderBannerList();
-    showToast('عکس بنر قرار گرفت؛ با «ذخیره تغییرات» روی سایت نمایش داده می‌شود.');
+    // (Task 60) بازخورد فوری کیفیت: ابعاد واقعی عکس + وضعیت نمایش روی مانیتور کامپیوتر
+    var qi = adminBannerImgInfo(data), pc = adminBannerPcScale(qi);
+    if (qi.known && pc > 1.15) {
+      showToast('عکس بنر قرار گرفت (' + toFa(qi.w) + '×' + toFa(qi.h) + ')، اما برای کامپیوتر کوچک است: روی مانیتور حدود ' + toFa(pc.toFixed(1)) + ' برابر کش می‌آید و بی‌کیفیت می‌شود؛ روی موبایل خوب دیده می‌شود. برای کیفیت عالی، عکس اصلی با عرض ۱۹۲۰ پیکسل یا بیشتر بارگذاری کنید.');
+    } else {
+      showToast('عکس بنر با کیفیت اصلی قرار گرفت' + (qi.known ? ' (' + toFa(qi.w) + '×' + toFa(qi.h) + ')' : '') + '؛ با «ذخیره تغییرات» روی سایت نمایش داده می‌شود.');
+    }
   } else if (j.kind === 'staff') {
     adminCollectTeachers();
     var t = ADMIN_WORK.teachers[j.idx];
