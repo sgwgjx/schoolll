@@ -387,6 +387,21 @@ body.annpage-open{overflow:hidden}
 .annpage-thumbs button img{width:76px;height:56px;object-fit:cover;display:block}
 .annpage-thumbs button.on{border-color:var(--accent)}
 .annpage-thumbs button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+/* صفحهٔ «همهٔ اخبار / همهٔ گالری» — دکمهٔ «مشاهده همه» (Task 65) */
+.allpage-top{width:100%;max-width:1180px;margin:0 auto;display:flex;align-items:center;gap:12px;padding:14px 20px;flex:none}
+.allpage-title{flex:1;font-size:1.05rem;font-weight:800;color:var(--primary);margin:0;line-height:1.8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.allpage-tools{width:100%;max-width:1180px;margin:0 auto;padding:0 20px;flex:none}
+.allpage-search{display:flex;align-items:center;gap:10px;background:var(--surface);border:1.5px solid var(--border);border-radius:12px;padding:11px 14px;transition:border-color .2s,box-shadow .2s}
+.allpage-search:focus-within{border-color:var(--accent);box-shadow:0 0 0 4px rgba(47,126,195,.15)}
+.allpage-search>.ic{width:1.15em;height:1.15em;color:var(--text-light);flex:none}
+.allpage-search input{flex:1;border:0;outline:0;background:transparent;font:inherit;font-size:.92rem;color:var(--text);min-width:0;padding:0}
+.allpage-search input::placeholder{color:var(--text-light)}
+.allpage-clear{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border:0;border-radius:8px;background:var(--chip);color:var(--primary);cursor:pointer;flex:none}
+.allpage-clear:hover{background:var(--border)}
+.allpage-clear .ic{width:.95em;height:.95em}
+.allpage-clear[hidden]{display:none}
+.allpage-body{padding-top:18px;padding-bottom:60px}
+.allpage-body .ann-card{animation:none} /* فهرست بلند است؛ تاخیر پلکانی کارت‌ها حذف می‌شود */
 
 @media(max-width:560px){
   .annpage-top{padding:10px 12px}
@@ -530,8 +545,7 @@ body.annpage-open{overflow:hidden}
 }
 .gallery-item figcaption strong{font-size:.94rem;font-weight:700}
 
-/* نمایش مرحله‌ای گالری و اطلاعیه‌ها: ابتدا تعداد محدودی مورد نمایش داده می‌شود.
-   دکمه در حالت باز کامل به «مشاهده کمتر» تبدیل می‌شود و با جمع‌کردن به حالت اولیه برمی‌گردد. */
+/* نوار دکمهٔ زیر اخبار و گالری: «مشاهده همه» → صفحهٔ کامل همان بخش */
 .gallery-more{align-items:center;justify-content:center;gap:14px;margin-top:26px;flex-wrap:wrap}
 .gallery-more:not([hidden]){display:flex}
 .gallery-more .btn{padding:11px 30px}
@@ -1370,9 +1384,9 @@ section.hero{scroll-margin-top:0}
       <div class="section-head reveal">
         <h2>اخبار مدرسه</h2>      </div>
       <div class="ann-list" id="annList"></div>
-      <!-- نمایش مرحله‌ای اطلاعیه‌ها — دکمهٔ «مشاهده بیشتر / مشاهده کمتر» -->
+      <!-- دکمهٔ «مشاهده همه» → صفحهٔ کامل اخبار: جستجو + همهٔ خبرها (جدیدترین اول) -->
       <div class="gallery-more" id="annMore" hidden>
-        <button type="button" class="btn btn-outline" id="annMoreBtn"><svg class="ic" aria-hidden="true"><use href="#i-down"/></svg>مشاهده بیشتر</button>
+        <button type="button" class="btn btn-outline" id="annMoreBtn"><svg class="ic" aria-hidden="true"><use href="#i-chev-left"/></svg>مشاهده همه</button>
       </div>
     </div>
   </section>
@@ -1394,7 +1408,7 @@ section.hero{scroll-margin-top:0}
   </section>
 
   <!-- ============================================================
-       بخش گالری (نمایش مرحله‌ای تصاویر — دکمهٔ «مشاهده بیشتر»)
+       بخش گالری (۶ مجموعهٔ اول در صفحهٔ اصلی — دکمهٔ «مشاهده همه»)
        ============================================================ -->
   <section class="section" id="gallery">
     <div class="container">
@@ -1403,7 +1417,7 @@ section.hero{scroll-margin-top:0}
       </div>
       <div class="gallery-grid" id="galleryGrid"></div>
       <div class="gallery-more" id="galleryMore" hidden>
-        <button type="button" class="btn btn-outline" id="galleryMoreBtn"><svg class="ic" aria-hidden="true"><use href="#i-down"/></svg>مشاهده بیشتر</button>
+        <button type="button" class="btn btn-outline" id="galleryMoreBtn"><svg class="ic" aria-hidden="true"><use href="#i-chev-left"/></svg>مشاهده همه</button>
       </div>
     </div>
   </section>
@@ -1469,6 +1483,47 @@ section.hero{scroll-margin-top:0}
     <button type="button" class="admin-footer-text" id="adminFooterBtn" aria-label="پنل مدیریت مدرسه" title="پنل مدیریت مدرسه">© مدرسه شهید آیت‌الله رئیسی — تمامی حقوق محفوظ است.</button>
   </div>
 </footer>
+
+<!-- صفحهٔ همهٔ اخبار (دکمهٔ «مشاهده همه» → فهرست کامل + فیلد جستجو؛ جدیدترین خبر اول) -->
+<div class="ann-page" id="annAllPage" role="dialog" aria-modal="true" aria-label="همهٔ اخبار مدرسه" hidden>
+  <div class="allpage-top">
+    <button type="button" class="annpage-close" id="annAllClose" title="بازگشت" aria-label="بازگشت به صفحهٔ اصلی">
+      <svg class="ic" aria-hidden="true"><use href="#i-x"/></svg>
+    </button>
+    <h2 class="allpage-title">همهٔ اخبار</h2>
+    <span class="chip" id="annAllCount"></span>
+  </div>
+  <div class="allpage-tools">
+    <div class="allpage-search">
+      <svg class="ic" aria-hidden="true"><use href="#i-zoom"/></svg>
+      <input type="text" id="annAllSearch" placeholder="جستجو در عنوان یا متن خبر…" aria-label="جستجو در اخبار" autocomplete="off" enterkeyhint="search">
+      <button type="button" class="allpage-clear" id="annAllClear" title="پاک کردن جستجو" aria-label="پاک کردن جستجو" hidden>
+        <svg class="ic" aria-hidden="true"><use href="#i-x"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="annpage-scroll" id="annAllScroll">
+    <div class="container allpage-body">
+      <div class="ann-list" id="annAllList"></div>
+    </div>
+  </div>
+</div>
+
+<!-- صفحهٔ همهٔ گالری (دکمهٔ «مشاهده همه» → همهٔ مجموعه‌ها؛ بدون فیلد جستجو) -->
+<div class="ann-page" id="galleryAllPage" role="dialog" aria-modal="true" aria-label="همهٔ تصاویر گالری" hidden>
+  <div class="allpage-top">
+    <button type="button" class="annpage-close" id="galleryAllClose" title="بازگشت" aria-label="بازگشت به صفحهٔ اصلی">
+      <svg class="ic" aria-hidden="true"><use href="#i-x"/></svg>
+    </button>
+    <h2 class="allpage-title">همهٔ تصاویر گالری</h2>
+    <span class="chip" id="galleryAllCount"></span>
+  </div>
+  <div class="annpage-scroll" id="galleryAllScroll">
+    <div class="container allpage-body">
+      <div class="gallery-grid" id="galleryAllGrid"></div>
+    </div>
+  </div>
+</div>
 
 <!-- صفحهٔ اختصاصی اطلاعیه (کلیک روی کارت اطلاعیه → تصویر بالا + متن کامل) -->
 <div class="ann-page" id="annPage" role="dialog" aria-modal="true" aria-label="جزئیات خبر" hidden>
@@ -2398,10 +2453,8 @@ function renderScheduleView(classId) {
     scheduleTableHTML(classId);
 }
 
-/* ---------- اطلاعیه‌ها (نمایش مرحله‌ای — «مشاهده بیشتر / کمتر») ---------- */
-var ANN_PAGE = 6;   // حداقل تعداد اطلاعیهٔ اولیه؛ اگر تعداد کل بیشتر از ۶ باشد دکمهٔ «مشاهده بیشتر» نمایش داده می‌شود
-var ANN_STEP = 6;   // هر بار فشردن دکمه فقط همین ۶ اطلاعیهٔ جدید اضافه می‌شود — هرگز همهٔ موارد یا تعداد زیاد (مثل ۱۰۰ تا) یک‌جا لود نمی‌شود
-var annShown = 0;   // تعداد اطلاعیه‌های رندرشدهٔ فعلی
+/* ---------- اطلاعیه‌ها (صفحهٔ اصلی فقط ۶ خبر؛ بقیه در صفحهٔ «مشاهده همه») ---------- */
+var ANN_PAGE = 6;   // حداکثر خبرهای صفحهٔ اصلی؛ بیشتر از آن با دکمهٔ «مشاهده همه» در صفحهٔ کامل دیده می‌شود
 
 function annItemHtml(a, i) {
   var src = annCardSrc(a);
@@ -2423,12 +2476,9 @@ function updateAnnMore() {
   var total = ANNOUNCEMENTS.length;
   var box = document.getElementById('annMore');
   if (!box) return;
-  // اگر کل اطلاعیه‌ها ۶ مورد یا کمتر است، همه نمایش داده می‌شوند و دکمه‌ای لازم نیست
+  // صفحهٔ اصلی فقط ۶ خبر دارد؛ دکمهٔ «مشاهده همه» فقط وقتی هست که خبر بیشتری موجود باشد
   if (total <= ANN_PAGE) { box.hidden = true; return; }
   box.hidden = false;
-  // در حالت کامل‌باز دکمه به «مشاهده کمتر» تبدیل می‌شود (نه اینکه ناپدید شود)
-  document.getElementById('annMoreBtn').innerHTML =
-    (annShown >= total) ? icon('up') + 'مشاهده کمتر' : icon('down') + 'مشاهده بیشتر';
 }
 
 /* ---------- بنر صفحه اصلی: ساخت اسلایدها از داده‌های پنل مدیریت ---------- */
@@ -2461,7 +2511,7 @@ function renderBannerSlides() {
   }
 }
 
-function renderAnnouncements(keepShown) {
+function renderAnnouncements() {
   var list = document.getElementById('annList');
   var items = ANNOUNCEMENTS.slice();
   sortAnnouncements(items); // جدیدترین خبر همیشه اول نمایش داده می‌شود
@@ -2473,17 +2523,11 @@ function renderAnnouncements(keepShown) {
     if (box0) box0.hidden = true;
     return;
   }
-  var prev = keepShown ? list.querySelectorAll('.ann-card').length : 0;
-  if (!keepShown) {
-    annShown = Math.min(ANN_PAGE, items.length);
-    list.innerHTML = '';
-  } else {
-    // افزودن مرحله‌ای: در هر فشردن دکمه فقط ۶ اطلاعیهٔ جدید به انتهای فهرست اضافه می‌شود
-    annShown = Math.min(annShown + ANN_STEP, items.length);
-  }
+  // صفحهٔ اصلی فقط ۶ خبر اول (جدیدترین‌ها) را نشان می‌دهد — بقیه در صفحهٔ «مشاهده همه»
+  var shown = Math.min(ANN_PAGE, items.length);
   var html = '';
-  for (var i = prev; i < annShown; i++) html += annItemHtml(items[i], i);
-  list.insertAdjacentHTML('beforeend', html);
+  for (var i = 0; i < shown; i++) html += annItemHtml(items[i], i);
+  list.innerHTML = html;
   updateAnnMore();
 }
 
@@ -2526,7 +2570,56 @@ function closeAnnPage() {
   var pg = document.getElementById('annPage');
   if (pg.hidden) return;
   pg.hidden = true;
-  document.body.classList.remove('annpage-open');
+  // اگر صفحهٔ «همهٔ اخبار» هنوز باز است، قفل اسکرول صفحهٔ پشت باقی می‌ماند
+  if (document.getElementById('annAllPage').hidden) document.body.classList.remove('annpage-open');
+}
+
+/* ---------- صفحهٔ «همهٔ اخبار» (دکمهٔ «مشاهده همه»: جستجو + فهرست کامل؛ جدیدترین اول) ---------- */
+// جدیدترین خبر همیشه اول فهرست است: ترتیب ANNOUNCEMENTS همان ترتیب پنل مدیریت است
+// (خبر تازه با «افزودن» به ابتدای فهرست اضافه می‌شود)؛ جستجو عنوان و متن را می‌گردد.
+var annAllItems = []; // فهرست (در صورت جستجو: فیلترشدهٔ) صفحهٔ همهٔ اخبار
+
+function annAllRender() {
+  var box = document.getElementById('annAllList');
+  if (!box) return;
+  var q = (document.getElementById('annAllSearch').value || '').trim();
+  var items = ANNOUNCEMENTS.slice();
+  sortAnnouncements(items); // جدیدترین اول
+  if (q) {
+    items = items.filter(function (a) {
+      return (a.title || '').indexOf(q) > -1 || (a.text || '').indexOf(q) > -1;
+    });
+  }
+  annAllItems = items;
+  document.getElementById('annAllCount').textContent = toFa(items.length) + ' خبر';
+  document.getElementById('annAllClear').hidden = !q;
+  if (!items.length) {
+    box.innerHTML =
+      '<div class="empty-state">' + icon('bell') +
+      '<p>' + (q ? 'خبری با این عبارت پیدا نشد.' : 'خبری برای نمایش وجود ندارد.') + '</p></div>';
+    return;
+  }
+  var html = '';
+  for (var i = 0; i < items.length; i++) html += annItemHtml(items[i], i);
+  box.innerHTML = html;
+}
+
+function openAnnAllPage() {
+  var pg = document.getElementById('annAllPage');
+  if (!pg || !pg.hidden) return;
+  document.getElementById('annAllSearch').value = ''; // جستجوی قبلی پاک می‌شود؛ فهرست تازه رندر می‌شود
+  pg.hidden = false;
+  annAllRender();
+  document.getElementById('annAllScroll').scrollTop = 0;
+  document.body.classList.add('annpage-open'); // قفل اسکرول صفحهٔ پشت
+  document.getElementById('annAllSearch').focus();
+}
+function closeAnnAllPage() {
+  var pg = document.getElementById('annAllPage');
+  if (pg.hidden) return;
+  pg.hidden = true;
+  // قفل اسکرول فقط وقتی برداشته می‌شود که صفحهٔ جزئیات خبر هم باز نباشد
+  if (document.getElementById('annPage').hidden) document.body.classList.remove('annpage-open');
 }
 
 /* ---------- امتحانات (با فیلتر کلاس) ---------- */
@@ -2598,12 +2691,9 @@ function galPhotos(g) {
   if (g.photos && g.photos.length) return g.photos;
   return g.photo ? [g.photo] : [];
 }
-// نمایش مرحله‌ای گالری: ابتدا حداقل ۸ مجموعه نمایش داده می‌شود
-// و با دکمهٔ «مشاهده بیشتر» دسته‌های بعدی اضافه می‌شوند. برای گالری‌های بزرگ
-// (۲۰۰+ عکس) بهینه است: هر مرحله فقط تکهٔ تازه رندر می‌شود (loading=lazy).
-var GALLERY_PAGE = 8;    // حداقل تعداد مجموعهٔ اولیه؛ اگر تعداد کل بیشتر از ۸ باشد دکمهٔ «مشاهده بیشتر» نمایش داده می‌شود
-var GALLERY_STEP = 8;    // هر بار فشردن دکمه فقط همین ۸ مجموعهٔ جدید اضافه می‌شود — هرگز همهٔ موارد یا تعداد زیاد (مثل ۱۰۰ تا) یک‌جا لود نمی‌شود
-var galleryShown = 0;    // تعداد مجموعه‌های رندرشدهٔ فعلی
+// نمایش گالری در صفحهٔ اصلی: فقط ۶ مجموعهٔ اول؛ بقیه با دکمهٔ «مشاهده همه»
+// در صفحهٔ کامل گالری دیده می‌شوند (بدون جستجو — درخواست مدیر).
+var GALLERY_PAGE = 6;    // حداکثر مجموعه‌های صفحهٔ اصلی؛ بیشتر از آن دکمهٔ «مشاهده همه» نمایش داده می‌شود
 
 function galleryItemHtml(g, i) {
   var ph = galPhotos(g);
@@ -2623,28 +2713,59 @@ function updateGalleryMore() {
   var total = GALLERY_ITEMS.length;
   var box = document.getElementById('galleryMore');
   if (!box) return;
-  // اگر کل مجموعه‌ها ۸ مورد یا کمتر است، همه نمایش داده می‌شوند و دکمه‌ای لازم نیست
+  // صفحهٔ اصلی فقط ۶ مجموعه دارد؛ دکمهٔ «مشاهده همه» فقط وقتی هست که مجموعهٔ بیشتری موجود باشد
   if (total <= GALLERY_PAGE) { box.hidden = true; return; }
   box.hidden = false;
-  // در حالت کامل‌باز دکمه به «مشاهده کمتر» تبدیل می‌شود (نه اینکه ناپدید شود)
-  document.getElementById('galleryMoreBtn').innerHTML =
-    (galleryShown >= total) ? icon('up') + 'مشاهده کمتر' : icon('down') + 'مشاهده بیشتر';
 }
 
-function renderGallery(keepShown) {
+function renderGallery() {
   var grid = document.getElementById('galleryGrid');
-  var prev = keepShown ? grid.querySelectorAll('.gallery-item').length : 0;
-  if (!keepShown) {
-    galleryShown = Math.min(GALLERY_PAGE, GALLERY_ITEMS.length);
-    grid.innerHTML = '';
-  } else {
-    // افزودن مرحله‌ای: در هر فشردن دکمه فقط ۸ مجموعهٔ جدید به انتهای گالری اضافه می‌شود
-    galleryShown = Math.min(galleryShown + GALLERY_STEP, GALLERY_ITEMS.length);
+  if (!GALLERY_ITEMS.length) {
+    grid.innerHTML =
+      '<div class="empty-state">' + icon('image') +
+      '<p>تصویری برای نمایش وجود ندارد.</p></div>';
+    updateGalleryMore();
+    return;
+  }
+  // صفحهٔ اصلی فقط ۶ مجموعهٔ اول را نشان می‌دهد — بقیه در صفحهٔ «مشاهده همه»
+  var html = '';
+  for (var i = 0; i < Math.min(GALLERY_PAGE, GALLERY_ITEMS.length); i++) html += galleryItemHtml(GALLERY_ITEMS[i], i);
+  grid.innerHTML = html;
+  updateGalleryMore();
+}
+
+/* ---------- صفحهٔ «همهٔ گالری» (دکمهٔ «مشاهده همه»: همهٔ مجموعه‌ها؛ بدون جستجو) ---------- */
+function galleryAllRender() {
+  var grid = document.getElementById('galleryAllGrid');
+  if (!grid) return;
+  document.getElementById('galleryAllCount').textContent = toFa(GALLERY_ITEMS.length) + ' مجموعه';
+  if (!GALLERY_ITEMS.length) {
+    grid.innerHTML =
+      '<div class="empty-state">' + icon('image') +
+      '<p>تصویری برای نمایش وجود ندارد.</p></div>';
+    return;
   }
   var html = '';
-  for (var i = prev; i < galleryShown; i++) html += galleryItemHtml(GALLERY_ITEMS[i], i);
-  grid.insertAdjacentHTML('beforeend', html);
-  updateGalleryMore();
+  for (var i = 0; i < GALLERY_ITEMS.length; i++) html += galleryItemHtml(GALLERY_ITEMS[i], i);
+  grid.innerHTML = html;
+}
+function openGalleryAllPage() {
+  var pg = document.getElementById('galleryAllPage');
+  if (!pg || !pg.hidden) return;
+  pg.hidden = false;
+  galleryAllRender();
+  document.getElementById('galleryAllScroll').scrollTop = 0;
+  document.body.classList.add('annpage-open'); // قفل اسکرول صفحهٔ پشت
+  document.getElementById('galleryAllClose').focus();
+}
+function closeGalleryAllPage() {
+  var pg = document.getElementById('galleryAllPage');
+  if (pg.hidden) return;
+  pg.hidden = true;
+  // قفل اسکرول فقط وقتی برداشته می‌شود که صفحات خبر هم باز نباشند
+  if (document.getElementById('annPage').hidden && document.getElementById('annAllPage').hidden) {
+    document.body.classList.remove('annpage-open');
+  }
 }
 
 /* ============================================================
@@ -2887,24 +3008,10 @@ function init() {
     var item = e.target.closest('.gallery-item');
     if (item) openLightbox(Number(item.getAttribute('data-gi')));
   });
-  // «مشاهده بیشتر / کمتر» گالری: در حالت کامل‌باز، با زدن دکمه به ۸ مجموعهٔ اولیه برمی‌گردد
-  document.getElementById('galleryMoreBtn').addEventListener('click', function () {
-    if (galleryShown >= GALLERY_ITEMS.length) {
-      renderGallery(false);
-      document.getElementById('gallery').scrollIntoView({ behavior: 'smooth', block: 'start' });
-    } else {
-      renderGallery(true);
-    }
-  });
-  // «مشاهده بیشتر / کمتر» اطلاعیه‌ها: در حالت کامل‌باز، با زدن دکمه به ۶ اطلاعیهٔ اولیه برمی‌گردد
-  document.getElementById('annMoreBtn').addEventListener('click', function () {
-    if (annShown >= ANNOUNCEMENTS.length) {
-      renderAnnouncements(false);
-      document.getElementById('announcements').scrollIntoView({ behavior: 'smooth', block: 'start' });
-    } else {
-      renderAnnouncements(true);
-    }
-  });
+  // «مشاهده همه» گالری: باز شدن صفحهٔ کامل گالری (همهٔ مجموعه‌ها؛ بدون جستجو)
+  document.getElementById('galleryMoreBtn').addEventListener('click', openGalleryAllPage);
+  // «مشاهده همه» اخبار: باز شدن صفحهٔ کامل اخبار (جستجو + همهٔ خبرها؛ جدیدترین اول)
+  document.getElementById('annMoreBtn').addEventListener('click', openAnnAllPage);
   // کلیک (یا کلید Enter/Space) روی کارت اطلاعیه → صفحهٔ اختصاصی همان اطلاعیه
   function annCardActivate(e) {
     var card = e.target.closest ? e.target.closest('.ann-card') : null;
@@ -2917,6 +3024,30 @@ function init() {
   }
   document.getElementById('annList').addEventListener('click', annCardActivate);
   document.getElementById('annList').addEventListener('keydown', annCardActivate);
+  // کارت خبر در صفحهٔ «همهٔ اخبار» → صفحهٔ جزئیات همان خبر (فهرست فیلترشده ملاک است)
+  function annAllCardActivate(e) {
+    var card = e.target.closest ? e.target.closest('.ann-card') : null;
+    if (!card) return;
+    if (e.type === 'keydown' && e.key !== 'Enter' && e.key !== ' ') return;
+    if (e.type === 'keydown') e.preventDefault();
+    openAnnPage(annAllItems[+card.getAttribute('data-index')]);
+  }
+  document.getElementById('annAllList').addEventListener('click', annAllCardActivate);
+  document.getElementById('annAllList').addEventListener('keydown', annAllCardActivate);
+  // جستجوی زندهٔ اخبار: با هر تایپ، فهرست بر اساس عنوان و متن فیلتر می‌شود
+  document.getElementById('annAllSearch').addEventListener('input', annAllRender);
+  document.getElementById('annAllClear').addEventListener('click', function () {
+    document.getElementById('annAllSearch').value = '';
+    annAllRender();
+    document.getElementById('annAllSearch').focus();
+  });
+  document.getElementById('annAllClose').addEventListener('click', closeAnnAllPage);
+  // مجموعهٔ گالری در صفحهٔ «همهٔ گالری» → نمایش بزرگ همان مجموعه در لایت‌باکس
+  document.getElementById('galleryAllGrid').addEventListener('click', function (e) {
+    var item = e.target.closest('.gallery-item');
+    if (item) openLightbox(Number(item.getAttribute('data-gi')));
+  });
+  document.getElementById('galleryAllClose').addEventListener('click', closeGalleryAllPage);
   // بستن صفحهٔ اطلاعیه
   document.getElementById('annPageClose').addEventListener('click', closeAnnPage);
   // اطلاعیه: کلیک روی تصویر اصلی → نمایش بزرگِ عکس‌های همان اطلاعیه با ورق‌زدن (Task 53)
@@ -2967,6 +3098,8 @@ function init() {
       if (!document.getElementById('adminGate').hidden) { closeAdminGate(); return; }
       if (document.getElementById('lightbox').classList.contains('open')) { closeLightbox(); return; }
       if (!document.getElementById('annPage').hidden) { closeAnnPage(); return; }
+      if (!document.getElementById('annAllPage').hidden) { closeAnnAllPage(); return; }
+      if (!document.getElementById('galleryAllPage').hidden) { closeGalleryAllPage(); return; }
       if (document.getElementById('menuPanel').classList.contains('open')) { closeMenu(); }
       return;
     }
@@ -4738,6 +4871,10 @@ adminInit();
     if (panel && panel.classList.contains('open')) return true; // مدیر در حال ویرایش است
     var ap = document.getElementById('annPage');
     if (ap && !ap.hidden) return true; // کاربر در حال خواندن یک اطلاعیه است
+    var aap = document.getElementById('annAllPage');
+    if (aap && !aap.hidden) return true; // کاربر در صفحهٔ همهٔ اخبار است
+    var gap = document.getElementById('galleryAllPage');
+    if (gap && !gap.hidden) return true; // کاربر در صفحهٔ همهٔ گالری است
     return false;
   }
 
