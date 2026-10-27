@@ -1173,7 +1173,7 @@ section.hero{scroll-margin-top:0}
 /* بنر فقط یک عکس تمیز است؛ نه متن، نه دکمه، نه لایهٔ رنگی (Task 57) */
 .hero-bg{
   position:absolute;inset:0;
-  background-image:var(--img,none); /* عکس آپلودشدهٔ مدیر؛ خالی = پس‌زمینهٔ آبیِ ساده */
+  background-image:none; /* عکس از پنل به‌صورت استایل مستقیم روی همین عنصر قرار می‌گیرد (Task 61) */
   background-size:cover;background-position:center;
 }
 
@@ -1523,7 +1523,7 @@ section.hero{scroll-margin-top:0}
     <div class="admin-body-inner">
 
       <section class="admin-tab active" id="atab-banner">
-        <div class="adm-note"><svg class="ic" aria-hidden="true"><use href="#i-info"/></svg><span>بنر صفحهٔ اصلی فقط از عکس تشکیل می‌شود؛ هیچ عنوان، متن، دکمه یا لایهٔ رنگی روی آن نمایش داده نمی‌شود. عکس دقیقاً با همان کیفیت اصلی و بدون هیچ فشرده‌سازی ذخیره می‌شود (تا ~۳ مگابایت در هر اسلاید). مهم: روی موبایل تقریباً هر عکسی خوب دیده می‌شود، اما روی مانیتور کامپیوتر عکس باید به‌اندازهٔ کافی بزرگ باشد؛ برای کیفیت عالی، عکس افقی با عرض ۱۹۲۰ پیکسل یا بیشتر (ایده‌آل ۲۰۰۰ تا ۴۰۰۰) بارگذاری کنید و همیشه از فایل اصلی عکس استفاده کنید — عکس‌های دانلودشده از واتساپ/تلگرام یا از اینترنت معمولاً کوچک و کم‌کیفیت‌اند. زیر هر اسلاید، ابعاد، حجم و «نشان کیفیت» عکس ذخیره‌شده نمایش داده می‌شود تا از مناسب بودن عکس مطمئن شوید. برای هر اسلاید: «افزودن اسلاید» را بزنید، سپس روی «بارگذاری عکس» همان اسلاید کلیک کنید و در پایان «ذخیره تغییرات» را بزنید. اگر عکسِ فعلی بنر از نسخهٔ قبلی فشرده شده، همان عکس اصلی را یک بار دیگر بارگذاری و ذخیره کنید تا با کیفیت کامل جایگزین شود.</span></div>
+        <div class="adm-note"><svg class="ic" aria-hidden="true"><use href="#i-info"/></svg><span>بنر فقط عکس است و با همان کیفیت اصلی، بدون فشرده‌سازی ذخیره می‌شود. برای کیفیت عالی روی موبایل و کامپیوتر، عکس اصلی با عرض ۱۹۲۰ پیکسل یا بیشتر (ایده‌آل ۲۰۰۰ تا ۴۰۰۰) بارگذاری کنید؛ نسخه‌های واتساپ/تلگرام کوچک و بی‌کیفیت‌اند. نشان کیفیت زیر هر اسلاید، مناسب بودن عکس را نشان می‌دهد.</span></div>
         <div class="adm-toolbar">
           <div><strong>اسلایدهای بنر صفحه اصلی</strong><span class="adm-count" id="admBannerCount"></span></div>
           <button type="button" class="adm-add" id="admBannerAdd"><svg class="ic" aria-hidden="true"><use href="#i-plus"/></svg>افزودن اسلاید</button>
@@ -2378,8 +2378,11 @@ function renderBannerSlides() {
   var slides = track.querySelectorAll('.hero-slide');
   for (var k = 0; k < slides.length; k++) {
     var src = items[k] && items[k].img;
-    if (src) slides[k].style.setProperty('--img', 'url("' + src + '")');
-    else slides[k].style.removeProperty('--img');
+    // (Task 61) عکس مستقیماً روی .hero-bg قرار می‌گیرد: مقدارهای بزرگ (تا ~۳.۸M کاراکتر)
+    // در «ویژگی سفارشی» CSS جا نمی‌شوند و بنر خالی می‌ماند؛ استایل مستقیم چنین سقفی ندارد.
+    var bg = slides[k].querySelector('.hero-bg');
+    if (src) bg.style.backgroundImage = 'url("' + src + '")';
+    else bg.style.backgroundImage = '';
   }
 }
 
@@ -3447,6 +3450,7 @@ function adminCollectAnn() {
 
 // کار جاری آپلود: ann (کارت خبر) | banner (عکس پس‌زمینهٔ اسلاید بنر) | staff (عکس پروفایل) | gallery (گالری)
 var adminUploadJob = { kind: '', idx: -1 };
+window.__bannerFit = false; // (Task 61) پرچم: عکس بنرِ بزرگ‌تر از سقف، نسخه‌بندی شده است
 
 /* ---------- تب بنر صفحه اصلی ---------- */
 // بنر فقط عکس است؛ کارت هر اسلاید: پیش‌نمایش، بارگذاری/تغییر عکس، حذف عکس، جابه‌جایی و حذف اسلاید
@@ -3502,15 +3506,15 @@ function adminBannerCard(s, i, total) {
     var q = adminBannerImgInfo(s.img), pc = adminBannerPcScale(q), qTxt = '', qCls = 'ok';
     if (!q.known) {
       qCls = 'mid';
-      qTxt = 'ابعاد این عکس قابل تشخیص نیست؛ اگر روی کامپیوتر بی‌کیفیت دیده شد، عکس بزرگ‌تر (عرض ۱۹۲۰ پیکسل یا بیشتر) بارگذاری کنید.';
+      qTxt = 'ابعاد نامعلوم؛ برای اطمینان روی کامپیوتر، عکس بزرگ‌تر بارگذاری کنید.';
     } else if (pc <= 1.001) {
-      qTxt = 'کیفیت عالی؛ این عکس روی مانیتور کامپیوتر هم تیز و بدون کش‌شدگی نمایش داده می‌شود.';
+      qTxt = 'عالی — روی همهٔ دستگاه‌ها تیز و بی‌نقص.';
     } else if (pc <= 1.15) {
       qCls = 'mid';
-      qTxt = 'قابل قبول؛ حدود ' + toFa(pc.toFixed(1)) + ' برابر روی کامپیوتر بزرگ می‌شود. عکس بزرگ‌تر (عرض ۱۹۲۰ پیکسل یا بیشتر) نتیجهٔ بهتری می‌دهد.';
+      qTxt = 'قابل قبول؛ روی کامپیوتر حدود ' + toFa(pc.toFixed(1)) + '× کش می‌آید؛ عکس بزرگ‌تر بهتر است.';
     } else {
       qCls = 'low';
-      qTxt = 'روی موبایل خوب دیده می‌شود، اما روی مانیتور کامپیوتر حدود ' + toFa(pc.toFixed(1)) + ' برابر کش می‌آید و بی‌کیفیت می‌شود؛ عکس اصلی با عرض ۱۹۲۰ پیکسل یا بیشتر (ایده‌آل ۲۰۰۰ تا ۴۰۰۰) بارگذاری کنید.';
+      qTxt = 'روی کامپیوتر حدود ' + toFa(pc.toFixed(1)) + '× کش می‌آید و بی‌کیفیت می‌شود؛ عکس با عرض ۱۹۲۰+ بارگذاری کنید.';
     }
     qBadge = '<div class="adm-bq adm-bq-' + qCls + '">ابعاد: ' + (q.known ? toFa(q.w) + '×' + toFa(q.h) + ' پیکسل' : 'نامعلوم') + ' • حجم: ~' + toFa(q.kb) + ' کیلوبایت — ' + qTxt + '</div>';
   }
@@ -3525,7 +3529,7 @@ function adminBannerCard(s, i, total) {
     '<div class="adm-galstrip">' + strip +
     '<button type="button" class="adm-galadd" data-kind="banner" data-up="' + i + '" title="بارگذاری عکس بنر" aria-label="بارگذاری عکس بنر این اسلاید">' + icon('plus') + '<span>' + (s.img ? 'تغییر عکس' : 'بارگذاری عکس') + '</span></button>' +
     '</div>' +
-    '<div class="adm-upname">' + (s.img ? 'عکس با همان کیفیت اصلی و بدون فشرده‌سازی ذخیره شده است؛ نشان کیفیت زیر، وضعیت نمایش روی کامپیوتر را نشان می‌دهد.' : 'عکس افقی با عرض ۱۹۲۰ پیکسل یا بیشتر بهترین نتیجه را روی کامپیوتر می‌دهد؛ ذخیره بدون فشرده‌سازی (تا ~۳ مگابایت).') + '</div>' +
+    '<div class="adm-upname">' + (s.img ? 'بدون فشرده‌سازی ذخیره شده؛ وضعیت را نشان کیفیت زیر ببینید.' : 'عکس افقی با عرض ۱۹۲۰ پیکسل یا بیشتر (تا ~۳ مگابایت) بارگذاری کنید.') + '</div>' +
     qBadge +
     '</div>' +
     '<div class="adm-move-row">' +
@@ -3592,17 +3596,18 @@ function adminReadImage(file, opts, cb) {
     var raw = reader.result;
     var img = new Image();
     img.onload = function () {
-      // حالت بنر (Task 59): بدون فشرده‌سازی — عکس اصلی همان‌طور که هست ذخیره می‌شود
+      // حالت بنر (Task 59/61): عکس اصلی بدون هیچ فشرده‌سازی بایت‌به‌بایت ذخیره می‌شود
       if (cfg.raw) {
-        if (raw.length > maxChars) {
-          showToast('این عکس ' + toFa((raw.length * 3 / 4 / 1048576).toFixed(1)) + ' مگابایت است؛ حداکثر ' + toFa(Math.round(maxChars * 3 / 4 / 1048576)) + ' مگابایت عکس بنر پذیرفته می‌شود. لطفاً نسخهٔ سبک‌تر همین عکس را انتخاب کنید — ذخیره بدون افت کیفیت انجام می‌شود.');
-          return;
-        }
-        cb(raw); return; // کیفیت و فرمت عکس دقیقاً همان فایل اصلی است
+        if (raw.length <= maxChars) { cb(raw); return; } // کیفیت و فرمت دقیقاً همان فایل اصلی است
+        // (Task 61) فایل از سقف ذخیره بزرگ‌تر است: به‌جای رد‌شدن، بزرگ‌ترین نسخهٔ ممکن
+        // ساخته می‌شود (هرگز زیر ۱۹۲۰ پیکسل عرض) تا روی همهٔ دستگاه‌ها باکیفیت بماند.
+        maxDim = Math.min(4000, Math.max(img.naturalWidth, img.naturalHeight));
+        minDim = 1920;
+        qualitySteps = [0.95, 0.93, 0.9, 0.85];
+        window.__bannerFit = true;
+      } else if (raw.length <= maxChars && Math.max(img.naturalWidth, img.naturalHeight) <= Math.round(maxDim * 1.5)) {
+        cb(raw); return; // کیفیت اصلی عکس حفظ می‌شود (عبور بدون فشرده‌سازی عکس‌های کوچک)
       }
-      // عبور بدون فشرده‌سازی: فایل اصلی هم زیر سقف حجم است و هم ابعاد معقولی دارد
-      var tooBigDims = Math.max(img.naturalWidth, img.naturalHeight) > Math.round(maxDim * 1.5);
-      if (raw.length <= maxChars && !tooBigDims) { cb(raw); return; } // کیفیت اصلی عکس حفظ می‌شود
       var dim = maxDim, quality = qualitySteps[0], degraded = true, data = '';
       var qi = 0;
       while (true) {
@@ -3622,11 +3627,11 @@ function adminReadImage(file, opts, cb) {
         else if (dim > minDim) { dim = Math.max(minDim, Math.round(dim * 0.8)); } // بعد: ابعاد کوچک‌تر
         else break; // کف فشرده‌سازی؛ ادامه نیست
       }
-      if (!data || data.length < 64) { showToast('خواندن این تصویر ممکن نشد.'); return; }
+      if (!data || data.length < 64) { window.__bannerFit = false; showToast('خواندن این تصویر ممکن نشد.'); return; }
       if (data.length > maxChars) {
-        showToast('تصویر حتی پس از فشرده‌سازی بزرگ است؛ لطفاً عکس کوچک‌تری انتخاب کنید.'); return;
+        window.__bannerFit = false; showToast('عکس هنوز بزرگ است؛ عکس کوچک‌تری انتخاب کنید.'); return;
       }
-      if (degraded) showToast('برای جا شدن در حافظه، ابعاد/کیفیت عکس کمی کاهش یافت.');
+      if (degraded && !cfg.raw) showToast('برای جا شدن در حافظه، ابعاد/کیفیت عکس کمی کاهش یافت.');
       cb(data);
     };
     img.onerror = function () { showToast('این فایل تصویر معتبر نیست.'); };
@@ -3638,7 +3643,7 @@ function adminReadImage(file, opts, cb) {
 // اعمال عکس آپلودشده روی داده کاری + بازرندر همان زبانه
 function adminApplyUpload(data) {
   // (Task 59) اگر پنل در میانهٔ انتخاب فایل قفل/بسته شده باشد، به‌جای خطای خاموش پیام روشن می‌دهیم
-  if (!ADMIN_WORK) { showToast('پنل بسته یا قفل شده است؛ دوباره باز کنید و عکس را بارگذاری کنید.'); return; }
+  if (!ADMIN_WORK) { window.__bannerFit = false; showToast('پنل بسته شد؛ دوباره باز کنید و عکس را بارگذاری کنید.'); return; }
   var j = adminUploadJob;
   if (j.kind === 'ann') {
     adminCollectAnn();
@@ -3649,19 +3654,22 @@ function adminApplyUpload(data) {
     a.imgs.push(data); // هر خبر می‌تواند چند عکس داشته باشد (Task 53)
     a.img = 'upload';
     adminRenderAnnList();
-    showToast('عکس به خبر افزوده شد؛ با «ذخیره تغییرات» روی سایت نمایش داده می‌شود.');
+    showToast('عکس به خبر افزوده شد؛ «ذخیره تغییرات» را بزنید.');
   } else if (j.kind === 'banner') {
     adminCollectBanner();
     var bs = ADMIN_WORK.banner[j.idx];
-    if (!bs) return;
+    if (!bs) { window.__bannerFit = false; return; }
     bs.img = data; // هر اسلاید فقط یک عکس دارد؛ عکس تازه جایگزین می‌شود
     adminRenderBannerList();
-    // (Task 60) بازخورد فوری کیفیت: ابعاد واقعی عکس + وضعیت نمایش روی مانیتور کامپیوتر
+    // (Task 60/61) بازخورد کوتاه: ابعاد واقعی عکس + هشدارِ عکسِ کوچک برای کامپیوتر
     var qi = adminBannerImgInfo(data), pc = adminBannerPcScale(qi);
+    var fit = !!window.__bannerFit; window.__bannerFit = false;
     if (qi.known && pc > 1.15) {
-      showToast('عکس بنر قرار گرفت (' + toFa(qi.w) + '×' + toFa(qi.h) + ')، اما برای کامپیوتر کوچک است: روی مانیتور حدود ' + toFa(pc.toFixed(1)) + ' برابر کش می‌آید و بی‌کیفیت می‌شود؛ روی موبایل خوب دیده می‌شود. برای کیفیت عالی، عکس اصلی با عرض ۱۹۲۰ پیکسل یا بیشتر بارگذاری کنید.');
+      showToast('این عکس برای کامپیوتر کوچک است (' + toFa(pc.toFixed(1)) + '× کش می‌آید)؛ عکس با عرض ۱۹۲۰+ بارگذاری کنید.');
+    } else if (fit) {
+      showToast('فایل بزرگ بود؛ بزرگ‌ترین نسخهٔ ممکن (' + toFa(qi.w) + '×' + toFa(qi.h) + ') ذخیره شد؛ «ذخیره تغییرات» را بزنید.');
     } else {
-      showToast('عکس بنر با کیفیت اصلی قرار گرفت' + (qi.known ? ' (' + toFa(qi.w) + '×' + toFa(qi.h) + ')' : '') + '؛ با «ذخیره تغییرات» روی سایت نمایش داده می‌شود.');
+      showToast('عکس بنر با کیفیت اصلی ذخیره شد' + (qi.known ? ' (' + toFa(qi.w) + '×' + toFa(qi.h) + ')' : '') + '؛ «ذخیره تغییرات» را بزنید.');
     }
   } else if (j.kind === 'staff') {
     adminCollectTeachers();
@@ -3669,7 +3677,7 @@ function adminApplyUpload(data) {
     if (!t) return;
     t.photo = data;
     adminRenderTeachers();
-    showToast('عکس پروفایل آپلود شد؛ با «ذخیره تغییرات» روی سایت نمایش داده می‌شود.');
+    showToast('عکس پروفایل قرار گرفت؛ «ذخیره تغییرات» را بزنید.');
   } else if (j.kind === 'gallery') {
     adminCollectGallery();
     var g = ADMIN_WORK.gallery[j.idx];
@@ -3677,7 +3685,7 @@ function adminApplyUpload(data) {
     if (!g.photos) g.photos = [];
     g.photos.push(data); // هر مجموعه می‌تواند چند عکس داشته باشد
     adminRenderGallery();
-    showToast('عکس به مجموعه افزوده شد؛ با «ذخیره تغییرات» روی سایت نمایش داده می‌شود.');
+    showToast('عکس به مجموعه افزوده شد؛ «ذخیره تغییرات» را بزنید.');
   } else return;
   adminUploadJob = { kind: '', idx: -1 }; // (Task 59) کار آپلود تمام شد؛ کارکردهای کهنه پاک شود
   adminDirty = true;
@@ -4138,7 +4146,7 @@ function adminSaveAll() {
   _probe.savedAt = new Date().toISOString();
   var _chars = JSON.stringify(_probe).length;
   if (_chars > ADMIN_SAVE_MAX_CHARS) {
-    showToast('مجموع داده‌ها برای ذخیره روی سرور بزرگ است (~' + toFa(Math.round(_chars * 3 / 4 / 1048576)) + ' مگابایت). عکس‌های بنر را سبک‌تر کنید (هر اسلاید حداکثر ~۳ مگابایت) یا تعداد اسلایدهای سنگین را کمتر کنید.');
+    showToast('حجم کل داده‌ها زیاد است (~' + toFa(Math.round(_chars * 3 / 4 / 1048576)) + ' مگابایت)؛ عکس‌های بنر را سبک‌تر یا تعدادشان را کمتر کنید.');
     return;
   }
 
@@ -4282,7 +4290,7 @@ function adminInit() {
     adminRenderBannerList();
     adminScrollTop();
     adminDirty = true;
-    showToast('اسلاید خالی افزوده شد؛ حالا روی دکمهٔ «بارگذاری عکس» در همان اسلاید کلیک کنید و در پایان «ذخیره تغییرات» را بزنید.');
+    showToast('اسلاید افزوده شد؛ عکس آن را بارگذاری و «ذخیره تغییرات» را بزنید.');
   });
 
   // افزودن اطلاعیه
