@@ -1003,8 +1003,14 @@ textarea.adm-in{resize:vertical;line-height:1.8}
 .adm-galadd{width:64px;height:64px;border-radius:8px;border:1.5px dashed var(--accent);background:transparent;color:var(--accent);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;cursor:pointer;font:inherit;font-size:.6rem;font-weight:700;padding:0}
 .adm-galadd:hover{background:var(--chip)}
 .adm-galadd .ic{width:15px;height:15px}
-/* تب بنر صفحه اصلی: پیش‌نمایش گسترده + دکمه‌های جابه‌جایی اسلایدها */
-#admBannerList .adm-thumb{width:120px;height:auto;aspect-ratio:16/9}
+/* تب بنر صفحه اصلی: پیش‌نمایش گسترده + برچسب اسلاید + دکمه‌های جابه‌جایی اسلایدها */
+#admBannerList .adm-thumb{width:150px;height:auto;aspect-ratio:16/9}
+#admBannerList .adm-blabel{flex:1;min-width:0;font-weight:800;color:var(--primary);font-size:.92rem}
+#admBannerList .adm-galph{width:150px;height:84px}
+#admBannerList .adm-galadd{width:150px;height:84px;font-size:.72rem}
+.adm-banx{position:absolute;top:4px;inset-inline-end:4px;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;padding:0;border:none;background:rgba(192,39,51,.92);color:#fff;cursor:pointer}
+.adm-banx .ic{width:11px;height:11px}
+.adm-banx:hover{background:#c02733}
 .adm-move-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
 .adm-move{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:10px;border:1.5px solid var(--border);background:var(--surface-2);color:var(--text-light);font:inherit;font-size:.8rem;font-weight:700;cursor:pointer;transition:all .2s}
 .adm-move:hover:not([disabled]){border-color:var(--accent);color:var(--accent)}
@@ -1157,28 +1163,14 @@ section.hero{scroll-margin-top:0}
   transition:opacity .9s ease,visibility .9s;
 }
 .hero-slide.is-active{opacity:1;visibility:visible;z-index:1}
+/* نام مدرسه فقط برای موتورهای جست‌وجو؛ روی بنر هیچ متنی نمایش داده نمی‌شود */
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+/* بنر فقط یک عکس تمیز است؛ نه متن، نه دکمه، نه لایهٔ رنگی (Task 57) */
 .hero-bg{
   position:absolute;inset:0;
-  background-image:var(--ov),var(--img,none);
+  background-image:var(--img,none); /* عکس آپلودشدهٔ مدیر؛ خالی = پس‌زمینهٔ آبیِ ساده */
   background-size:cover;background-position:center;
 }
-.hero-slide.s1{--ov:linear-gradient(135deg,rgba(21,57,95,.90),rgba(29,90,153,.74))}
-.hero-slide.s2{--ov:linear-gradient(135deg,rgba(14,76,122,.90),rgba(27,127,184,.72))}
-.hero-slide.s3{--ov:linear-gradient(135deg,rgba(30,58,138,.90),rgba(59,111,212,.72))}
-.hero-slide.s4{--ov:linear-gradient(135deg,rgba(18,71,95,.90),rgba(42,138,168,.72))}
-
-.hero-content{
-  position:relative;max-width:880px;width:100%;margin-inline:auto;
-  padding:96px 64px 76px;color:#fff;
-}
-.hero-content>*{opacity:0;transform:translateY(16px);transition:opacity .7s ease .25s,transform .7s ease .25s}
-.hero-slide.is-active .hero-content>*{opacity:1;transform:none}
-.hero-slide.is-active .hero-content>:nth-child(2){transition-delay:.38s}
-.hero-slide.is-active .hero-content>:nth-child(3){transition-delay:.5s}
-.hero .hero-title{
-  margin:0;font-size:clamp(1.8rem,5.4vw,3.8rem);font-weight:800;line-height:1.5;white-space:normal;color:#fff;
-}
-.hero .hero-sub{margin:14px 0 28px;font-size:clamp(.95rem,2.2vw,1.2rem);line-height:2;color:#d3e3f4}
 
 /* فلش‌ها */
 .hero-arrow{
@@ -1208,16 +1200,11 @@ section.hero{scroll-margin-top:0}
 
 @media (max-width:700px){
   .hero.welcome{height:clamp(340px,50vh,420px);height:clamp(340px,50svh,420px)}
-  .hero-content{padding:76px 20px 48px}
-  .hero .hero-title{font-size:clamp(1.35rem,6.4vw,1.9rem);line-height:1.6}
-  .hero .hero-sub{margin:8px 0 18px;font-size:.88rem;line-height:1.9}
-  .hero-content .btn{padding:9px 18px;font-size:.88rem}
   .hero-arrow{display:none} /* در موبایل با کشیدن انگشت */
   .hero-dots{bottom:8px}
 }
 @media (prefers-reduced-motion:reduce){
   .hero-slide{transition:none}
-  .hero-content>*{transition:none;transform:none}
 }
 </style>
 </head>
@@ -1308,17 +1295,14 @@ section.hero{scroll-margin-top:0}
        صفحه اصلی (هیرو)
        ============================================================ -->
   <section class="welcome hero" id="home" aria-roledescription="carousel" aria-label="بنر صفحه اول">
+    <!-- نام مدرسه فقط برای موتورهای جست‌وجو (پنهان) — روی بنر هیچ متنی نشان داده نمی‌شود -->
+    <h1 class="sr-only">مدرسه شهید آیت‌الله رئیسی</h1>
     <!-- اسلایدهای بنر از «پنل مدیریت ← بنر صفحه اصلی» خوانده و با جاوااسکریپت ساخته می‌شوند؛
-         تنها یک اسلاید پیش‌فرض (نام مدرسه) به‌صورت ثابت اینجاست تا پیش از بارگذاری داده‌ها بنر خالی نماند -->
+         بنر فقط عکس است؛ تا عکس انتخاب شود، پس‌زمینهٔ آبیِ ساده دیده می‌شود -->
     <div class="hero-track" id="heroTrack">
 
-      <div class="hero-slide s1 is-active">
+      <div class="hero-slide is-active" aria-hidden="false">
         <div class="hero-bg"></div>
-        <div class="hero-content">
-          <h1 class="hero-title">مدرسه شهید آیت‌الله رئیسی</h1>
-          <p class="hero-sub">دوره متوسطه اول | پایه‌های هفتم، هشتم و نهم — شیراز</p>
-          <a href="#announcements" class="btn btn-white">مشاهده اخبار</a>
-        </div>
       </div>
 
     </div>
@@ -1534,7 +1518,7 @@ section.hero{scroll-margin-top:0}
     <div class="admin-body-inner">
 
       <section class="admin-tab active" id="atab-banner">
-        <div class="adm-note"><svg class="ic" aria-hidden="true"><use href="#i-info"/></svg><span>اسلایدهای بنر بالای صفحهٔ اصلی از اینجا کنترل می‌شوند؛ عنوان، متن، دکمه و لینک هر اسلاید را بنویسید و در صورت تمایل برای همان اسلاید عکس پس‌زمینه بارگذاری کنید. عکس زیر لایهٔ آبیِ نیمه‌شفاف قرار می‌گیرد تا متن خوانا بماند و بدون عکس هم بنر آبیِ پیش‌فرض نمایش داده می‌شود. ترتیب اسلایدها با دکمه‌های «جابه‌جایی» تغییر می‌کند.</span></div>
+        <div class="adm-note"><svg class="ic" aria-hidden="true"><use href="#i-info"/></svg><span>بنر صفحهٔ اصلی فقط از عکس تشکیل می‌شود؛ هیچ عنوان، متن، دکمه یا لایهٔ رنگی روی آن نمایش داده نمی‌شود — بنر دلخواهتان را طراحی کنید و همین‌جا جای‌گزین کنید. برای هر اسلاید فقط عکس را بارگذاری کنید (تصویر افقی و بزرگ، مثلاً ۱۶۰۰×۹۰۰، بهترین نتیجه را دارد). تا عکس انتخاب نشده باشد، پس‌زمینهٔ سادهٔ آبی دیده می‌شود و ترتیب اسلایدها با دکمه‌های «جابه‌جایی» عوض می‌شود.</span></div>
         <div class="adm-toolbar">
           <div><strong>اسلایدهای بنر صفحه اصلی</strong><span class="adm-count" id="admBannerCount"></span></div>
           <button type="button" class="adm-add" id="admBannerAdd"><svg class="ic" aria-hidden="true"><use href="#i-plus"/></svg>افزودن اسلاید</button>
@@ -1987,18 +1971,12 @@ ANNOUNCEMENTS.forEach(function (a) {
 
 /* ============================================================
    بخش ۳) بنر صفحه اصلی (هیرو)
-   اسلایدهای بنر از پنل مدیریت ویرایش می‌شوند؛ عکس پس‌زمینه اختیاری است:
-   img خالی = پس‌زمینهٔ آبیِ پیش‌فرض، در غیر این صورت عکس زیر لایهٔ آبیِ نیمه‌شفاف.
+   اسلایدهای بنر از پنل مدیریت ویرایش می‌شوند؛ هر اسلاید فقط یک عکس است.
+   img خالی = پس‌زمینهٔ آبیِ ساده؛ هیچ متن یا لایهٔ رنگی روی عکس قرار نمی‌گیرد.
    ============================================================ */
-const BANNER_LINKS = [
-  { v: '#announcements', t: 'اخبار' },
-  { v: '#exams',         t: 'امتحانات' },
-  { v: '#gallery',       t: 'گالری' },
-  { v: '#teachers',      t: 'دبیران و کادر مدرسه' },
-  { v: '#schedule',      t: 'برنامه کلاسی' },
-];
+// بنر فقط «عکس» است: هیچ عنوان/متن/دکمه‌ای روی اسلایدها ساخته نمی‌شود (Task 57)
 const DEFAULT_BANNER = [
-  { title: 'مدرسه شهید آیت‌الله رئیسی', sub: 'دوره متوسطه اول | پایه‌های هفتم، هشتم و نهم — شیراز', btn: 'مشاهده اخبار', link: '#announcements', img: '' },
+  { img: '' }, // اسلاید خالی: جای عکسی که مدیر از پنل بارگذاری می‌کند
 ];
 // دادهٔ زندهٔ بنر؛ ویرایش مدیر در تب «بنر صفحه اصلی» در SchoolDB ثبت می‌شود
 var BANNER = SchoolDB.get('banner');
@@ -2374,7 +2352,7 @@ function updateAnnMore() {
 }
 
 /* ---------- بنر صفحه اصلی: ساخت اسلایدها از داده‌های پنل مدیریت ---------- */
-// اگر مدیر همهٔ اسلایدها را حذف کند، اسلاید پیش‌فرض نام مدرسه نمایش داده می‌شود تا بنر خالی نماند
+// بنر فقط عکس است؛ اگر مدیر همهٔ اسلایدها را حذف کند یک اسلاید خالی می‌ماند تا بنر تهی نگردد
 function bannerSlideItems() {
   return (Array.isArray(BANNER) && BANNER.length) ? BANNER : DEFAULT_BANNER;
 }
@@ -2384,18 +2362,14 @@ function renderBannerSlides() {
   var items = bannerSlideItems();
   var html = '';
   for (var i = 0; i < items.length; i++) {
-    var s = items[i] || {};
+    // هر اسلاید فقط یک لایهٔ عکس دارد؛ بدون هیچ متن، دکمه یا لایهٔ رنگی (Task 57)
     html +=
-      '<div class="hero-slide s' + ((i % 4) + 1) + (i === 0 ? ' is-active' : '') + '" aria-hidden="' + (i === 0 ? 'false' : 'true') + '">' +
+      '<div class="hero-slide' + (i === 0 ? ' is-active' : '') + '" aria-hidden="' + (i === 0 ? 'false' : 'true') + '">' +
       '<div class="hero-bg"></div>' +
-      '<div class="hero-content">' +
-      (i === 0 ? '<h1 class="hero-title">' : '<h2 class="hero-title">') + escHTML(s.title || '') + (i === 0 ? '</h1>' : '</h2>') +
-      (s.sub ? '<p class="hero-sub">' + escHTML(s.sub) + '</p>' : '') +
-      (s.btn ? '<a href="' + escHTML(s.link || '#announcements') + '" class="btn btn-white">' + escHTML(s.btn) + '</a>' : '') +
-      '</div></div>';
+      '</div>';
   }
   track.innerHTML = html;
-  // عکس پس‌زمینهٔ هر اسلاید (زیر لایهٔ آبیِ نیمه‌شفاف قرار می‌گیرد)
+  // عکس هر اسلاید — همان‌طور که هست و بدون هیچ چیزی روی آن
   var slides = track.querySelectorAll('.hero-slide');
   for (var k = 0; k < slides.length; k++) {
     var src = items[k] && items[k].img;
@@ -3469,32 +3443,25 @@ function adminCollectAnn() {
 var adminUploadJob = { kind: '', idx: -1 };
 
 /* ---------- تب بنر صفحه اصلی ---------- */
+// بنر فقط عکس است؛ کارت هر اسلاید: پیش‌نمایش، بارگذاری/تغییر عکس، حذف عکس، جابه‌جایی و حذف اسلاید
 function adminBannerCard(s, i, total) {
   var src = s.img || placeholderImg('', 'image', '#123257', '#2f7ec3', true);
   var strip = s.img
     ? '<span class="adm-galph"><img src="' + s.img + '" alt="">' +
-      '<button type="button" class="adm-banx" data-up="' + i + '" title="حذف عکس این اسلاید" aria-label="حذف عکس پس‌زمینهٔ این اسلاید">' + icon('x') + '</button></span>'
+      '<button type="button" class="adm-banx" data-up="' + i + '" title="حذف عکس این اسلاید" aria-label="حذف عکس این اسلاید">' + icon('x') + '</button></span>'
     : '';
-  var links = BANNER_LINKS.map(function (L) {
-    return '<option value="' + L.v + '"' + (String(s.link || '#announcements') === L.v ? ' selected' : '') + '>' + L.t + '</option>';
-  }).join('');
   return (
     '<div class="adm-card" data-i="' + i + '">' +
     '<div class="adm-card-head">' +
     '<img class="adm-thumb" src="' + src + '" alt="">' +
-    '<input class="adm-in adm-title adm-btitle" value="' + escHTML(s.title || '') + '" placeholder="عنوان اسلاید (نام مدرسه، شعار یا تیتر)" aria-label="عنوان اسلاید بنر">' +
+    '<span class="adm-blabel">اسلاید ' + toFa(i + 1) + ' از ' + toFa(total) + '</span>' +
     '<button type="button" class="adm-del" data-del="banner" title="حذف اسلاید" aria-label="حذف اسلاید بنر">' + icon('trash') + '</button>' +
     '</div>' +
-    '<label class="adm-field"><span>متن زیر عنوان</span><input class="adm-in adm-bsub" value="' + escHTML(s.sub || '') + '" placeholder="متن کوتاه زیر عنوان (اختیاری)" aria-label="متن زیر عنوان اسلاید"></label>' +
-    '<div class="adm-row">' +
-    '<label class="adm-field"><span>متن دکمه</span><input class="adm-in adm-bbtn" value="' + escHTML(s.btn || '') + '" placeholder="خالی بماند؛ دکمه نمایش داده نمی‌شود" aria-label="متن دکمهٔ اسلاید"></label>' +
-    '<label class="adm-field"><span>لینک دکمه</span><select class="adm-in adm-blink" aria-label="مقصد دکمهٔ اسلاید">' + links + '</select></label>' +
-    '</div>' +
-    '<div class="adm-field"><span>عکس پس‌زمینه (اختیاری)</span>' +
+    '<div class="adm-field"><span>عکس این اسلاید</span>' +
     '<div class="adm-galstrip">' + strip +
-    '<button type="button" class="adm-galadd" data-kind="banner" data-up="' + i + '" title="بارگذاری عکس پس‌زمینه" aria-label="بارگذاری عکس پس‌زمینهٔ اسلاید">' + icon('plus') + '<span>' + (s.img ? 'تغییر عکس' : 'افزودن عکس') + '</span></button>' +
+    '<button type="button" class="adm-galadd" data-kind="banner" data-up="' + i + '" title="بارگذاری عکس بنر" aria-label="بارگذاری عکس بنر این اسلاید">' + icon('plus') + '<span>' + (s.img ? 'تغییر عکس' : 'بارگذاری عکس') + '</span></button>' +
     '</div>' +
-    '<div class="adm-upname">' + (s.img ? 'برای این اسلاید عکس پس‌زمینه انتخاب شده است.' : 'برای این اسلاید عکسی انتخاب نشده؛ بدون عکس، پس‌زمینهٔ آبیِ پیش‌فرض نمایش داده می‌شود.') + ' عکس زیر لایهٔ آبیِ نیمه‌شفاف قرار می‌گیرد تا متن خوانا بماند.</div>' +
+    '<div class="adm-upname">' + (s.img ? 'عکس این اسلاید روی بنر همان‌طور که هست و بدون هیچ متن یا لایهٔ اضافه نمایش داده می‌شود.' : 'هنوز عکسی برای این اسلاید انتخاب نشده؛ پس از بارگذاری، عکس کامل و تمیز روی بنر نشان داده می‌شود.') + ' تصویر افقی (مثلاً ۱۶۰۰×۹۰۰) بهترین نتیجه را دارد.</div>' +
     '</div>' +
     '<div class="adm-move-row">' +
     '<button type="button" class="adm-move" data-bm="up"' + (i === 0 ? ' disabled' : '') + '>' + icon('up') + 'جابه‌جایی به بالا</button>' +
@@ -3510,17 +3477,13 @@ function adminRenderBannerList() {
     : '<div class="adm-gempty">هنوز اسلایدی ساخته نشده است؛ با «افزودن اسلاید» اولین اسلاید بنر را بسازید.</div>';
 }
 function adminCollectBanner() {
-  document.querySelectorAll('#admBannerList .adm-card').forEach(function (card) {
-    var i = Number(card.getAttribute('data-i'));
-    var s = ADMIN_WORK.banner[i];
-    if (!s) return;
-    s.title = card.querySelector('.adm-btitle').value.trim();
-    s.sub = card.querySelector('.adm-bsub').value.trim();
-    s.btn = card.querySelector('.adm-bbtn').value.trim();
-    s.link = card.querySelector('.adm-blink').value;
+  // اسلایدهای بنر فقط «عکس» دارند؛ فیلد متنی‌ای برای جمع‌آوری وجود ندارد.
+  // فقط فیلدهای متنی قدیمی (title/sub/btn/link) پاک می‌شوند تا دادهٔ ذخیره‌شده سبک بماند.
+  ADMIN_WORK.banner.forEach(function (s) {
+    if (s) { delete s.title; delete s.sub; delete s.btn; delete s.link; }
   });
 }
-// جابه‌جایی ترتیب اسلایدهای بنر (اول متن‌ها ذخیره شوند تا از بین نروند)
+// جابه‌جایی ترتیب اسلایدهای بنر
 function adminBannerMove(i, dir) {
   adminCollectBanner();
   var j = dir === 'up' ? i - 1 : i + 1;
@@ -3597,9 +3560,9 @@ function adminApplyUpload(data) {
     adminCollectBanner();
     var bs = ADMIN_WORK.banner[j.idx];
     if (!bs) return;
-    bs.img = data; // هر اسلاید یک عکس پس‌زمینه دارد؛ عکس تازه جایگزین می‌شود
+    bs.img = data; // هر اسلاید فقط یک عکس دارد؛ عکس تازه جایگزین می‌شود
     adminRenderBannerList();
-    showToast('عکس پس‌زمینهٔ اسلاید قرار گرفت؛ با «ذخیره تغییرات» روی سایت نمایش داده می‌شود.');
+    showToast('عکس بنر قرار گرفت؛ با «ذخیره تغییرات» روی سایت نمایش داده می‌شود.');
   } else if (j.kind === 'staff') {
     adminCollectTeachers();
     var t = ADMIN_WORK.teachers[j.idx];
@@ -4031,11 +3994,7 @@ function adminSaveAll() {
 
   if (!adminValidateClasses()) return;
 
-  for (var bi = 0; bi < ADMIN_WORK.banner.length; bi++) {
-    if (!ADMIN_WORK.banner[bi].title) {
-      showToast('عنوان اسلاید بنر شماره ' + toFa(bi + 1) + ' نباید خالی باشد.'); return;
-    }
-  }
+  // بنر فقط عکس است؛ هیچ اعتبارسنجی متنی برای اسلایدهای بنر لازم نیست (Task 57)
   for (var i = 0; i < ADMIN_WORK.ann.length; i++) {
     if (!ADMIN_WORK.ann[i].title) {
       showToast('عنوان خبر شماره ' + toFa(i + 1) + ' نباید خالی باشد.'); return;
@@ -4194,13 +4153,15 @@ function adminInit() {
   // ذخیره
   document.getElementById('adminSaveBtn').addEventListener('click', adminSaveAll);
 
-  // افزودن اسلاید بنر صفحه اصلی
+  // افزودن اسلاید بنر صفحه اصلی (بلافاصله انتخابگر عکس باز می‌شود تا عکس را انتخاب کنید)
   document.getElementById('admBannerAdd').addEventListener('click', function () {
     adminCollectBanner();
-    ADMIN_WORK.banner.unshift({ title: '', sub: '', btn: '', link: '#announcements', img: '' });
+    ADMIN_WORK.banner.unshift({ img: '' });
     adminRenderBannerList();
     adminScrollTop();
     adminDirty = true;
+    adminUploadJob = { kind: 'banner', idx: 0 };
+    document.getElementById('admImgFile').click();
   });
 
   // افزودن اطلاعیه
