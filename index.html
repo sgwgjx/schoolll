@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="google-site-verification" content="xv4gmiZQJm2FgOFy_rdwJHqexBnHYSwNHWLRPWJLvKw" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="وب‌سایت رسمی مدرسه شهید آیت‌الله رئیسی (شهید رییسی) شیراز؛ دوره متوسطه اول، پایه‌های هفتم، هشتم و نهم. برنامه کلاسی، امتحانات، اطلاعیه‌ها، دبیران و آدرس مدرسه در شیراز، بلوار کریم‌خان زند.">
+<meta name="description" content="وب‌سایت رسمی مدرسه شهید آیت‌الله رئیسی (شهید رییسی) شیراز؛ دوره متوسطه اول، پایه‌های هفتم، هشتم و نهم. برنامه کلاسی، امتحانات، اخبار، دبیران و آدرس مدرسه در شیراز، بلوار کریم‌خان زند.">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://raisi-school.vercel.app/">
 <meta property="og:url" content="https://raisi-school.vercel.app/">
@@ -12,7 +12,7 @@
 <meta property="og:locale" content="fa_IR">
 <meta property="og:site_name" content="مدرسه شهید آیت‌الله رئیسی شیراز">
 <meta property="og:title" content="مدرسه شهید آیت‌الله رئیسی شیراز | دوره متوسطه اول">
-<meta property="og:description" content="وب‌سایت رسمی مدرسه شهید آیت‌الله رئیسی شیراز؛ پایه‌های هفتم، هشتم و نهم. برنامه کلاسی، امتحانات و اطلاعیه‌ها.">
+<meta property="og:description" content="وب‌سایت رسمی مدرسه شهید آیت‌الله رئیسی شیراز؛ پایه‌های هفتم، هشتم و نهم. برنامه کلاسی، امتحانات و اخبار.">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -97,20 +97,10 @@ body.dark-mode .gallery-item figcaption{background:rgba(7,17,32,.62);border-top:
 /* سرجدول برنامهٔ کلاسی در تاریکی: آبی روشن‌تر از کارت تا دیده شود */
 body.dark-mode .schedule-table thead th{background:#1d4a7a}
 
-/* ---------- نوار پیشرفت اسکرول (Task 55) ---------- */
-.scroll-progress{position:fixed;top:0;left:0;right:0;height:4px;z-index:1450;pointer-events:none}
-.scroll-progress span{display:block;height:100%;background:linear-gradient(90deg,#1d5c96,var(--accent));transform:scaleX(0);transform-origin:100% 50%;will-change:transform;transition:transform .05s linear}
-body.dark-mode .scroll-progress span{background:linear-gradient(90deg,#2b6fae,#8fc7f8)}
-
-/* ---------- اسکرول‌بار سفارشی (Task 55) ---------- */
-html{scrollbar-width:thin;scrollbar-color:#2f7ec3 transparent}
-html:has(body.dark-mode){scrollbar-color:#66b3f2 transparent}
-::-webkit-scrollbar{width:11px;height:11px}
-::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#2f7ec3,#1d5c96);border-radius:999px;border:3px solid transparent;background-clip:padding-box;min-height:40px}
-::-webkit-scrollbar-thumb:hover{background:linear-gradient(180deg,#3a8fd6,#2563a8);background-clip:padding-box}
-body.dark-mode ::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#66b3f2,#3b7ec9);background-clip:padding-box}
-body.dark-mode ::-webkit-scrollbar-thumb:hover{background:linear-gradient(180deg,#8fc7f8,#4d94d8);background-clip:padding-box}
+/* ---------- اسکرول‌بار صفحه اصلی: به درخواست مدیر محو شده است (پیمایش همچنان کار می‌کند) ---------- */
+html{scrollbar-width:none}
+html::-webkit-scrollbar{display:none}
+body::-webkit-scrollbar{display:none}
 
 /* ---------- تنظیمات پایه ---------- */
 *{margin:0;padding:0;box-sizing:border-box}
@@ -1013,6 +1003,13 @@ textarea.adm-in{resize:vertical;line-height:1.8}
 .adm-galadd{width:64px;height:64px;border-radius:8px;border:1.5px dashed var(--accent);background:transparent;color:var(--accent);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;cursor:pointer;font:inherit;font-size:.6rem;font-weight:700;padding:0}
 .adm-galadd:hover{background:var(--chip)}
 .adm-galadd .ic{width:15px;height:15px}
+/* تب بنر صفحه اصلی: پیش‌نمایش گسترده + دکمه‌های جابه‌جایی اسلایدها */
+#admBannerList .adm-thumb{width:120px;height:auto;aspect-ratio:16/9}
+.adm-move-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.adm-move{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:10px;border:1.5px solid var(--border);background:var(--surface-2);color:var(--text-light);font:inherit;font-size:.8rem;font-weight:700;cursor:pointer;transition:all .2s}
+.adm-move:hover:not([disabled]){border-color:var(--accent);color:var(--accent)}
+.adm-move[disabled]{opacity:.4;cursor:default}
+.adm-move .ic{width:14px;height:14px}
 /* تب کلاس‌ها: گروه‌بندی بر اساس پایه، هر کلاس یک ردیف فشرده */
 .adm-gtitle{display:flex;align-items:center;gap:6px;margin:18px 0 10px;color:var(--primary);font-size:.95rem;font-weight:800}
 .adm-gtitle:first-child{margin-top:0}
@@ -1057,6 +1054,7 @@ textarea.adm-in{resize:vertical;line-height:1.8}
   .adm-card-head{flex-wrap:wrap}
   .adm-thumb{width:100%;height:auto;aspect-ratio:1}
   #admAnnList .adm-thumb{width:100%;aspect-ratio:16/9}
+  #admBannerList .adm-thumb{width:100%;aspect-ratio:16/9}
   .adm-grid-table input{min-width:96px}
 }
 
@@ -1118,12 +1116,113 @@ body.dark-mode .cs-panel{box-shadow:0 12px 32px rgba(0,0,0,.5)}
   .cs-opt{padding:12px 14px}
 }
 @media (prefers-reduced-motion:reduce){.cs-panel{animation:none}.cs-arrow{transition:none}}
+
+/* ============================================================
+   هدر شفاف روی بنر + بنر چرخان صفحه اول
+   بالای صفحه: هدر شفاف و روی بنر | با اسکرول: هدر سفید و چسبان
+   ============================================================ */
+.site-header{
+  position:fixed;top:0;right:0;left:0;
+  transition:background .35s ease,border-color .35s ease,box-shadow .35s ease;
+}
+.site-header.scrolled{box-shadow:0 2px 14px rgba(12,30,55,.12)}
+body.dark-mode .site-header.scrolled{box-shadow:0 2px 14px rgba(0,0,0,.45)}
+
+/* حالت شفاف (بالای صفحه و وقتی منو بسته است) */
+.site-header:not(.scrolled):not(:has(.menu-panel.open)){background:transparent;border-bottom-color:transparent}
+.site-header:not(.scrolled):not(:has(.menu-panel.open)) .brand-text strong{color:#fff}
+.site-header:not(.scrolled):not(:has(.menu-panel.open)) .brand-text span{color:rgba(255,255,255,.85)}
+.site-header:not(.scrolled):not(:has(.menu-panel.open)) .brand-logo{background:#fff}
+.site-header:not(.scrolled):not(:has(.menu-panel.open)) .menu-burger{
+  background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.6);box-shadow:none;
+  -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
+}
+.site-header:not(.scrolled):not(:has(.menu-panel.open)) .menu-burger:hover{background:rgba(255,255,255,.28);box-shadow:none}
+
+/* ---------- بنر ---------- */
+.hero.welcome{
+  padding:0;text-align:center;border-bottom:none;
+  height:clamp(460px,80vh,720px);height:clamp(460px,80svh,720px);
+}
+section.hero{scroll-margin-top:0}
+/* سایه‌ی ملایم بالای بنر تا هدر شفاف همیشه خوانا باشد */
+.hero.welcome::after{
+  content:'';position:absolute;top:0;right:0;left:0;height:170px;z-index:2;pointer-events:none;
+  background:linear-gradient(rgba(6,16,30,.55),rgba(6,16,30,0));
+}
+.hero-track{position:absolute;inset:0;z-index:1}
+.hero-slide{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  opacity:0;visibility:hidden;
+  transition:opacity .9s ease,visibility .9s;
+}
+.hero-slide.is-active{opacity:1;visibility:visible;z-index:1}
+.hero-bg{
+  position:absolute;inset:0;
+  background-image:var(--ov),var(--img,none);
+  background-size:cover;background-position:center;
+}
+.hero-slide.s1{--ov:linear-gradient(135deg,rgba(21,57,95,.90),rgba(29,90,153,.74))}
+.hero-slide.s2{--ov:linear-gradient(135deg,rgba(14,76,122,.90),rgba(27,127,184,.72))}
+.hero-slide.s3{--ov:linear-gradient(135deg,rgba(30,58,138,.90),rgba(59,111,212,.72))}
+.hero-slide.s4{--ov:linear-gradient(135deg,rgba(18,71,95,.90),rgba(42,138,168,.72))}
+
+.hero-content{
+  position:relative;max-width:880px;width:100%;margin-inline:auto;
+  padding:96px 64px 76px;color:#fff;
+}
+.hero-content>*{opacity:0;transform:translateY(16px);transition:opacity .7s ease .25s,transform .7s ease .25s}
+.hero-slide.is-active .hero-content>*{opacity:1;transform:none}
+.hero-slide.is-active .hero-content>:nth-child(2){transition-delay:.38s}
+.hero-slide.is-active .hero-content>:nth-child(3){transition-delay:.5s}
+.hero .hero-title{
+  margin:0;font-size:clamp(1.8rem,5.4vw,3.8rem);font-weight:800;line-height:1.5;white-space:normal;color:#fff;
+}
+.hero .hero-sub{margin:14px 0 28px;font-size:clamp(.95rem,2.2vw,1.2rem);line-height:2;color:#d3e3f4}
+
+/* فلش‌ها */
+.hero-arrow{
+  position:absolute;top:50%;z-index:3;transform:translateY(-50%);
+  width:46px;height:46px;border-radius:50%;cursor:pointer;
+  display:grid;place-items:center;color:#fff;
+  background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.5);
+  -webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);
+  transition:background .2s;
+}
+.hero-arrow:hover{background:rgba(255,255,255,.3)}
+.hero-arrow:focus-visible,.hero-dot:focus-visible{outline:2px solid #fff;outline-offset:3px}
+.hero-prev{right:18px}
+.hero-next{left:18px}
+
+/* نقطه‌ها */
+.hero-dots{position:absolute;bottom:18px;right:0;left:0;z-index:3;display:flex;justify-content:center;gap:2px}
+.hero-dot{
+  width:26px;height:26px;padding:0;border:0;background:transparent;cursor:pointer;
+  display:grid;place-items:center;
+}
+.hero-dot::after{
+  content:'';width:10px;height:10px;border-radius:10px;
+  background:rgba(255,255,255,.45);transition:width .3s,background .3s;
+}
+.hero-dot[aria-selected="true"]::after{width:28px;background:#fff}
+
+@media (max-width:700px){
+  .hero.welcome{height:clamp(340px,50vh,420px);height:clamp(340px,50svh,420px)}
+  .hero-content{padding:76px 20px 48px}
+  .hero .hero-title{font-size:clamp(1.35rem,6.4vw,1.9rem);line-height:1.6}
+  .hero .hero-sub{margin:8px 0 18px;font-size:.88rem;line-height:1.9}
+  .hero-content .btn{padding:9px 18px;font-size:.88rem}
+  .hero-arrow{display:none} /* در موبایل با کشیدن انگشت */
+  .hero-dots{bottom:8px}
+}
+@media (prefers-reduced-motion:reduce){
+  .hero-slide{transition:none}
+  .hero-content>*{transition:none;transform:none}
+}
 </style>
 </head>
 
 <body>
-<!-- نوار پیشرفت اسکرول (Task 55): با پایین‌رفتن در صفحه از راست پر می‌شود -->
-<div class="scroll-progress" id="scrollProgress" aria-hidden="true"><span></span></div>
 <!-- لینک دسترسی سریع به محتوا -->
 <a class="skip-link" href="#mainContent">رفتن به محتوای اصلی</a>
 
@@ -1192,7 +1291,7 @@ body.dark-mode .cs-panel{box-shadow:0 12px 32px rgba(0,0,0,.5)}
   <nav class="menu-panel" id="menuPanel" aria-label="منوی اصلی">
     <div class="container menu-grid">
       <a href="#home"><svg class="ic" aria-hidden="true"><use href="#i-home"/></svg>خانه</a>
-      <a href="#announcements"><svg class="ic" aria-hidden="true"><use href="#i-bell"/></svg>اطلاعیه‌ها</a>
+      <a href="#announcements"><svg class="ic" aria-hidden="true"><use href="#i-bell"/></svg>اخبار</a>
       <a href="#exams"><svg class="ic" aria-hidden="true"><use href="#i-file"/></svg>امتحانات</a>
       <a href="#teachers"><svg class="ic" aria-hidden="true"><use href="#i-cap"/></svg>دبیران و کادر مدرسه</a>
       <a href="#gallery"><svg class="ic" aria-hidden="true"><use href="#i-image"/></svg>گالری</a>
@@ -1208,20 +1307,39 @@ body.dark-mode .cs-panel{box-shadow:0 12px 32px rgba(0,0,0,.5)}
   <!-- ============================================================
        صفحه اصلی (هیرو)
        ============================================================ -->
-  <section class="welcome" id="home">
-    <div class="container">
-      <h1>مدرسه شهید آیت‌الله رئیسی</h1>
+  <section class="welcome hero" id="home" aria-roledescription="carousel" aria-label="بنر صفحه اول">
+    <!-- اسلایدهای بنر از «پنل مدیریت ← بنر صفحه اصلی» خوانده و با جاوااسکریپت ساخته می‌شوند؛
+         تنها یک اسلاید پیش‌فرض (نام مدرسه) به‌صورت ثابت اینجاست تا پیش از بارگذاری داده‌ها بنر خالی نماند -->
+    <div class="hero-track" id="heroTrack">
+
+      <div class="hero-slide s1 is-active">
+        <div class="hero-bg"></div>
+        <div class="hero-content">
+          <h1 class="hero-title">مدرسه شهید آیت‌الله رئیسی</h1>
+          <p class="hero-sub">دوره متوسطه اول | پایه‌های هفتم، هشتم و نهم — شیراز</p>
+          <a href="#announcements" class="btn btn-white">مشاهده اخبار</a>
+        </div>
+      </div>
+
     </div>
+
+    <button type="button" class="hero-arrow hero-prev" id="heroPrev" aria-label="اسلاید قبلی">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 6 15 12 9 18"/></svg>
+    </button>
+    <button type="button" class="hero-arrow hero-next" id="heroNext" aria-label="اسلاید بعدی">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 6 9 12 15 18"/></svg>
+    </button>
+    <div class="hero-dots" id="heroDots" role="tablist" aria-label="انتخاب اسلاید"></div>
   </section>
 
 
   <!-- ============================================================
-       بخش اطلاعیه‌ها
+       بخش اخبار مدرسه
        ============================================================ -->
   <section class="section" id="announcements">
     <div class="container">
       <div class="section-head reveal">
-        <h2>اطلاعیه‌های مدرسه</h2>      </div>
+        <h2>اخبار مدرسه</h2>      </div>
       <div class="ann-list" id="annList"></div>
       <!-- نمایش مرحله‌ای اطلاعیه‌ها — دکمهٔ «مشاهده بیشتر / مشاهده کمتر» -->
       <div class="gallery-more" id="annMore" hidden>
@@ -1324,15 +1442,15 @@ body.dark-mode .cs-panel{box-shadow:0 12px 32px rgba(0,0,0,.5)}
 </footer>
 
 <!-- صفحهٔ اختصاصی اطلاعیه (کلیک روی کارت اطلاعیه → تصویر بالا + متن کامل) -->
-<div class="ann-page" id="annPage" role="dialog" aria-modal="true" aria-label="جزئیات اطلاعیه" hidden>
+<div class="ann-page" id="annPage" role="dialog" aria-modal="true" aria-label="جزئیات خبر" hidden>
   <div class="annpage-top">
-    <button type="button" class="annpage-close" id="annPageClose" title="بستن" aria-label="بستن صفحهٔ اطلاعیه">
+    <button type="button" class="annpage-close" id="annPageClose" title="بستن" aria-label="بستن صفحهٔ خبر">
       <svg class="ic" aria-hidden="true"><use href="#i-x"/></svg>
     </button>
   </div>
   <div class="annpage-scroll" id="annPageScroll">
     <div class="annpage-hero">
-      <button type="button" class="annpage-imgbtn" id="annPageImgBtn" title="نمایش بزرگ تصویر" aria-label="نمایش بزرگ تصویر اطلاعیه">
+      <button type="button" class="annpage-imgbtn" id="annPageImgBtn" title="نمایش بزرگ تصویر" aria-label="نمایش بزرگ تصویر خبر">
         <img id="annPageImg" alt="" draggable="false">
         <span class="zoom-hint" aria-hidden="true"><svg class="ic"><use href="#i-zoom"/></svg></span>
       </button>
@@ -1402,7 +1520,8 @@ body.dark-mode .cs-panel{box-shadow:0 12px 32px rgba(0,0,0,.5)}
   </div>
 
   <div class="admin-tabs">
-    <button type="button" data-atab="ann" class="active"><svg class="ic" aria-hidden="true"><use href="#i-bell"/></svg>اطلاعیه‌ها</button>
+    <button type="button" data-atab="banner" class="active"><svg class="ic" aria-hidden="true"><use href="#i-image"/></svg>بنر صفحه اصلی</button>
+    <button type="button" data-atab="ann"><svg class="ic" aria-hidden="true"><use href="#i-bell"/></svg>اخبار</button>
     <button type="button" data-atab="grid"><svg class="ic" aria-hidden="true"><use href="#i-calendar"/></svg>برنامه کلاسی</button>
     <button type="button" data-atab="cls"><svg class="ic" aria-hidden="true"><use href="#i-users"/></svg>کلاس‌ها</button>
     <button type="button" data-atab="exam"><svg class="ic" aria-hidden="true"><use href="#i-file"/></svg>امتحانات</button>
@@ -1414,11 +1533,20 @@ body.dark-mode .cs-panel{box-shadow:0 12px 32px rgba(0,0,0,.5)}
   <div class="admin-body">
     <div class="admin-body-inner">
 
-      <section class="admin-tab active" id="atab-ann">
+      <section class="admin-tab active" id="atab-banner">
+        <div class="adm-note"><svg class="ic" aria-hidden="true"><use href="#i-info"/></svg><span>اسلایدهای بنر بالای صفحهٔ اصلی از اینجا کنترل می‌شوند؛ عنوان، متن، دکمه و لینک هر اسلاید را بنویسید و در صورت تمایل برای همان اسلاید عکس پس‌زمینه بارگذاری کنید. عکس زیر لایهٔ آبیِ نیمه‌شفاف قرار می‌گیرد تا متن خوانا بماند و بدون عکس هم بنر آبیِ پیش‌فرض نمایش داده می‌شود. ترتیب اسلایدها با دکمه‌های «جابه‌جایی» تغییر می‌کند.</span></div>
+        <div class="adm-toolbar">
+          <div><strong>اسلایدهای بنر صفحه اصلی</strong><span class="adm-count" id="admBannerCount"></span></div>
+          <button type="button" class="adm-add" id="admBannerAdd"><svg class="ic" aria-hidden="true"><use href="#i-plus"/></svg>افزودن اسلاید</button>
+        </div>
+        <div id="admBannerList"></div>
+      </section>
+
+      <section class="admin-tab" id="atab-ann">
         <div class="adm-note"><svg class="ic" aria-hidden="true"><use href="#i-info"/></svg><span>تغییرات هر بخش را وارد کنید و در پایان با دکمه «ذخیره تغییرات» در پایین صفحه ثبت کنید.</span></div>
         <div class="adm-toolbar">
-          <div><strong>اطلاعیه‌های مدرسه</strong><span class="adm-count" id="admAnnCount"></span></div>
-          <button type="button" class="adm-add" id="admAnnAdd"><svg class="ic" aria-hidden="true"><use href="#i-plus"/></svg>افزودن اطلاعیه</button>
+          <div><strong>اخبار مدرسه</strong><span class="adm-count" id="admAnnCount"></span></div>
+          <button type="button" class="adm-add" id="admAnnAdd"><svg class="ic" aria-hidden="true"><use href="#i-plus"/></svg>افزودن خبر</button>
         </div>
         <div id="admAnnList"></div>
       </section>
@@ -1433,7 +1561,7 @@ body.dark-mode .cs-panel{box-shadow:0 12px 32px rgba(0,0,0,.5)}
       </section>
 
       <section class="admin-tab" id="atab-cls">
-        <div class="adm-note"><svg class="ic" aria-hidden="true"><use href="#i-info"/></svg><span>با «افزودن کلاس» کلاس جدید بسازید، نام و پایهٔ آن (هفتم، هشتم یا نهم) را مشخص کنید. کلاس‌ها در منوهای برنامه کلاسی، امتحانات و اطلاعیه‌ها هم ظاهر می‌شوند. حذف یک کلاس، برنامه کلاسی و آزمون‌های همان کلاس را هم پاک می‌کند. تغییرات با «ذخیره تغییرات» ثبت می‌شود.</span></div>
+        <div class="adm-note"><svg class="ic" aria-hidden="true"><use href="#i-info"/></svg><span>با «افزودن کلاس» کلاس جدید بسازید، نام و پایهٔ آن (هفتم، هشتم یا نهم) را مشخص کنید. کلاس‌ها در منوهای برنامه کلاسی، امتحانات و اخبار هم ظاهر می‌شوند. حذف یک کلاس، برنامه کلاسی و آزمون‌های همان کلاس را هم پاک می‌کند. تغییرات با «ذخیره تغییرات» ثبت می‌شود.</span></div>
         <div class="adm-card adm-cls-add">
           <div class="adm-card-head">
             <input class="adm-in adm-cname" id="admClassNewName" maxlength="30" placeholder="نام کلاس جدید (مثلاً هفتم ۵)" aria-label="نام کلاس جدید">
@@ -1627,6 +1755,11 @@ body.dark-mode .cs-panel{box-shadow:0 12px 32px rgba(0,0,0,.5)}
   var booted = false;
   function boot() {
     if (booted) return;
+    if (document.readyState === 'loading') {
+      // سند هنوز کامل تجزیه نشده؛ تا پایان تجزیه صبر می‌کنیم تا همهٔ اسکریپت‌های data-app در صفحه حاضر باشند
+      document.addEventListener('DOMContentLoaded', function () { boot(); }, { once: true });
+      return;
+    }
     booted = true;
     var list = document.querySelectorAll('script[data-app]');
     for (var i = 0; i < list.length; i++) {
@@ -1851,6 +1984,25 @@ ANNOUNCEMENTS.forEach(function (a) {
   if (!a.imgs) a.imgs = [];
   if (a.imgUpload && a.imgs.indexOf(a.imgUpload) === -1) a.imgs.unshift(a.imgUpload);
 });
+
+/* ============================================================
+   بخش ۳) بنر صفحه اصلی (هیرو)
+   اسلایدهای بنر از پنل مدیریت ویرایش می‌شوند؛ عکس پس‌زمینه اختیاری است:
+   img خالی = پس‌زمینهٔ آبیِ پیش‌فرض، در غیر این صورت عکس زیر لایهٔ آبیِ نیمه‌شفاف.
+   ============================================================ */
+const BANNER_LINKS = [
+  { v: '#announcements', t: 'اخبار' },
+  { v: '#exams',         t: 'امتحانات' },
+  { v: '#gallery',       t: 'گالری' },
+  { v: '#teachers',      t: 'دبیران و کادر مدرسه' },
+  { v: '#schedule',      t: 'برنامه کلاسی' },
+];
+const DEFAULT_BANNER = [
+  { title: 'مدرسه شهید آیت‌الله رئیسی', sub: 'دوره متوسطه اول | پایه‌های هفتم، هشتم و نهم — شیراز', btn: 'مشاهده اخبار', link: '#announcements', img: '' },
+];
+// دادهٔ زندهٔ بنر؛ ویرایش مدیر در تب «بنر صفحه اصلی» در SchoolDB ثبت می‌شود
+var BANNER = SchoolDB.get('banner');
+if (!Array.isArray(BANNER)) BANNER = JSON.parse(JSON.stringify(DEFAULT_BANNER));
 
 /* ============================================================
    بخش ۴) گالری تصاویر (تصاویر نمونه ساخته‌شده با SVG)
@@ -2196,7 +2348,7 @@ var annShown = 0;   // تعداد اطلاعیه‌های رندرشدهٔ فع�
 function annItemHtml(a, i) {
   var src = annCardSrc(a);
   return (
-    '<article class="ann-card" role="button" tabindex="0" data-index="' + i + '" aria-label="مشاهدهٔ جزئیات اطلاعیه" style="animation-delay:' + (i * 0.06) + 's">' +
+    '<article class="ann-card" role="button" tabindex="0" data-index="' + i + '" aria-label="مشاهدهٔ جزئیات خبر" style="animation-delay:' + (i * 0.06) + 's">' +
     '<div class="ann-thumb"><img src="' + src + '" alt="" loading="lazy"></div>' +
     '<div class="ann-body">' +
     '<h3>' + escHTML(a.title) + '</h3>' +
@@ -2221,14 +2373,45 @@ function updateAnnMore() {
     (annShown >= total) ? icon('up') + 'مشاهده کمتر' : icon('down') + 'مشاهده بیشتر';
 }
 
+/* ---------- بنر صفحه اصلی: ساخت اسلایدها از داده‌های پنل مدیریت ---------- */
+// اگر مدیر همهٔ اسلایدها را حذف کند، اسلاید پیش‌فرض نام مدرسه نمایش داده می‌شود تا بنر خالی نماند
+function bannerSlideItems() {
+  return (Array.isArray(BANNER) && BANNER.length) ? BANNER : DEFAULT_BANNER;
+}
+function renderBannerSlides() {
+  var track = document.getElementById('heroTrack');
+  if (!track) return;
+  var items = bannerSlideItems();
+  var html = '';
+  for (var i = 0; i < items.length; i++) {
+    var s = items[i] || {};
+    html +=
+      '<div class="hero-slide s' + ((i % 4) + 1) + (i === 0 ? ' is-active' : '') + '" aria-hidden="' + (i === 0 ? 'false' : 'true') + '">' +
+      '<div class="hero-bg"></div>' +
+      '<div class="hero-content">' +
+      (i === 0 ? '<h1 class="hero-title">' : '<h2 class="hero-title">') + escHTML(s.title || '') + (i === 0 ? '</h1>' : '</h2>') +
+      (s.sub ? '<p class="hero-sub">' + escHTML(s.sub) + '</p>' : '') +
+      (s.btn ? '<a href="' + escHTML(s.link || '#announcements') + '" class="btn btn-white">' + escHTML(s.btn) + '</a>' : '') +
+      '</div></div>';
+  }
+  track.innerHTML = html;
+  // عکس پس‌زمینهٔ هر اسلاید (زیر لایهٔ آبیِ نیمه‌شفاف قرار می‌گیرد)
+  var slides = track.querySelectorAll('.hero-slide');
+  for (var k = 0; k < slides.length; k++) {
+    var src = items[k] && items[k].img;
+    if (src) slides[k].style.setProperty('--img', 'url("' + src + '")');
+    else slides[k].style.removeProperty('--img');
+  }
+}
+
 function renderAnnouncements(keepShown) {
   var list = document.getElementById('annList');
   var items = ANNOUNCEMENTS.slice();
-  sortAnnouncements(items); // جدیدترین اطلاعیه همیشه اول نمایش داده می‌شود
+  sortAnnouncements(items); // جدیدترین خبر همیشه اول نمایش داده می‌شود
   if (!items.length) {
     list.innerHTML =
       '<div class="empty-state">' + icon('bell') +
-      '<p>اطلاعیه‌ای برای نمایش وجود ندارد.</p></div>';
+      '<p>خبری برای نمایش وجود ندارد.</p></div>';
     var box0 = document.getElementById('annMore');
     if (box0) box0.hidden = true;
     return;
@@ -2680,7 +2863,7 @@ function init() {
   document.getElementById('annPageClose').addEventListener('click', closeAnnPage);
   // اطلاعیه: کلیک روی تصویر اصلی → نمایش بزرگِ عکس‌های همان اطلاعیه با ورق‌زدن (Task 53)
   document.getElementById('annPageImgBtn').addEventListener('click', function () {
-    if (annPagePhotoList.length) openLightboxAt(annPagePhotoList, annPagePhotoIdx, document.getElementById('annPageTitle').textContent || 'تصویر اطلاعیه');
+    if (annPagePhotoList.length) openLightboxAt(annPagePhotoList, annPagePhotoIdx, document.getElementById('annPageTitle').textContent || 'تصویر خبر');
   });
   // نوار عکس‌های کوچک: انتخاب عکس اصلیِ صفحهٔ اطلاعیه
   document.getElementById('annPageThumbs').addEventListener('click', function (e) {
@@ -2709,15 +2892,10 @@ function init() {
   });
 
 
-  /* ----- سایهٔ هدر + نوار پیشرفت اسکرول (Task 55) ----- */
+  /* ----- سایهٔ هدر هنگام اسکرول (نوار پیشرفت اسکرول به درخواست مدیر حذف شد) ----- */
   var header = document.getElementById('siteHeader');
-  var progressBar = document.querySelector('#scrollProgress span');
   function updateScrollUI() {
-    var sy = window.scrollY;
-    header.classList.toggle('scrolled', sy > 10);
-    if (!progressBar) return;
-    var h = document.documentElement.scrollHeight - window.innerHeight;
-    progressBar.style.transform = 'scaleX(' + (h > 0 ? Math.min(1, sy / h) : 0) + ')';
+    header.classList.toggle('scrolled', window.scrollY > 10);
   }
   window.addEventListener('scroll', updateScrollUI, { passive: true });
   window.addEventListener('resize', updateScrollUI, { passive: true });
@@ -3019,6 +3197,7 @@ function adminDeepCopy(v) { return JSON.parse(JSON.stringify(v)); }
 function openAdminPanel() {
   if (!adminUnlocked()) { openAdminGate(); return; } // بدون نشستِ رمزدار، پنل باز نمی‌شود (جلوگیری از دورزدن درگاه از کنسول)
   ADMIN_WORK = {
+    banner: adminDeepCopy(Array.isArray(BANNER) ? BANNER : []),
     ann: adminDeepCopy(ANNOUNCEMENTS),
     sched: adminDeepCopy(SCHEDULES),
     schedTeachers: adminDeepCopy(SCHEDULE_TEACHERS),
@@ -3031,6 +3210,7 @@ function openAdminPanel() {
   adminClassesChanged = false;
   adminFillSchedClass();
   adminRenderClasses();
+  adminRenderBannerList();
   adminRenderAnnList();
   adminRenderSched();
   adminRenderExamList();
@@ -3148,7 +3328,7 @@ function adminAnnSrc(a) {
 }
 // طرح‌های آمادهٔ کارت اطلاعیه (داخل گزینه «سفارشی») — همگی گرادیانی با آیکون و متن خوانا
 var ADM_TPLS = [
-  { label: 'اطلاعیه مدرسه',  icon: 'star',     c1: '#15395f', c2: '#2f7ec3' },
+  { label: 'خبر مدرسه',      icon: 'star',     c1: '#15395f', c2: '#2f7ec3' },
   { label: 'برنامه امتحانات', icon: 'clock',    c1: '#7f1d1d', c2: '#ef4444' },
   { label: 'جلسه اولیا',      icon: 'users',    c1: '#065f46', c2: '#10b981' },
   { label: 'مسابقه ورزشی',    icon: 'ball',     c1: '#7c2d12', c2: '#f97316' },
@@ -3192,7 +3372,7 @@ function adminAnnStrip(a, i) {
   return adminAnnPhotos(a).map(function (p, pi) {
     return '<span class="adm-galph"><img src="' + p + '" alt="">' +
       '<button type="button" class="adm-annx" data-kind="ann" data-up="' + i + '" data-gx="' + pi +
-      '" title="حذف این عکس از اطلاعیه" aria-label="حذف این عکس از اطلاعیه">' + icon('x') + '</button></span>';
+      '" title="حذف این عکس از خبر" aria-label="حذف این عکس از خبر">' + icon('x') + '</button></span>';
   }).join('');
 }
 function adminAnnCard(a, i) {
@@ -3203,10 +3383,10 @@ function adminAnnCard(a, i) {
     '<div class="adm-card" data-i="' + i + '">' +
     '<div class="adm-card-head">' +
     '<img class="adm-thumb" src="' + adminAnnSrc(a) + '" alt="">' +
-    '<input class="adm-in adm-title-input adm-title" value="' + escHTML(a.title) + '" placeholder="عنوان اطلاعیه" aria-label="عنوان اطلاعیه">' +
-    '<button type="button" class="adm-del" data-del="ann" title="حذف اطلاعیه" aria-label="حذف اطلاعیه">' + icon('trash') + '</button>' +
+    '<input class="adm-in adm-title-input adm-title" value="' + escHTML(a.title) + '" placeholder="عنوان خبر" aria-label="عنوان خبر">' +
+    '<button type="button" class="adm-del" data-del="ann" title="حذف خبر" aria-label="حذف خبر">' + icon('trash') + '</button>' +
     '</div>' +
-    '<textarea class="adm-in adm-text" rows="4" placeholder="متن کامل اطلاعیه" aria-label="متن اطلاعیه">' + escHTML(a.text) + '</textarea>' +
+    '<textarea class="adm-in adm-text" rows="4" placeholder="متن کامل خبر" aria-label="متن خبر">' + escHTML(a.text) + '</textarea>' +
     '<div class="adm-row">' +
     '<label class="adm-field"><span>روز</span><select class="adm-in adm-dD">' + adminDayOptions(dt.y, dt.m, dt.d) + '</select></label>' +
     '<label class="adm-field"><span>ماه</span><select class="adm-in adm-dM">' + adminMonthOptions(dt.m) + '</select></label>' +
@@ -3224,11 +3404,11 @@ function adminAnnCard(a, i) {
     '<label class="adm-field adm-grad-only"><span>رنگ ۲</span><input type="color" class="adm-in adm-c2" value="' + (a.c2 || '#2f7ec3') + '"></label>' +
     '<div class="adm-field adm-grad-only"><span>پیش‌نمایش رنگ‌ها</span><div class="adm-gradprev" style="background:linear-gradient(135deg,' + (a.c1 || '#15395f') + ',' + (a.c2 || '#2f7ec3') + ')"></div></div>' +
     '</div>' +
-    '<div class="adm-field adm-uponly"><span>عکس‌های اطلاعیه (' + toFa(adminAnnPhotos(a).length) + ')</span>' +
+    '<div class="adm-field adm-uponly"><span>عکس‌های خبر (' + toFa(adminAnnPhotos(a).length) + ')</span>' +
     '<div class="adm-galstrip">' + adminAnnStrip(a, i) +
-    '<button type="button" class="adm-galadd" data-kind="ann" data-up="' + i + '" title="افزودن عکس به این اطلاعیه" aria-label="افزودن عکس به این اطلاعیه">' + icon('plus') + '<span>افزودن عکس</span></button>' +
+    '<button type="button" class="adm-galadd" data-kind="ann" data-up="' + i + '" title="افزودن عکس به این خبر" aria-label="افزودن عکس به این خبر">' + icon('plus') + '<span>افزودن عکس</span></button>' +
     '</div>' +
-    '<div class="adm-upname">' + (adminAnnPhotos(a).length ? 'برای این اطلاعیه عکس آپلود شده است؛ می‌توانید چند عکس داشته باشید.' : 'هنوز عکسی انتخاب نشده است؛ با «افزودن عکس» اولین تصویر را انتخاب کنید.') + '</div>' +
+    '<div class="adm-upname">' + (adminAnnPhotos(a).length ? 'برای این خبر عکس آپلود شده است؛ می‌توانید چند عکس داشته باشید.' : 'هنوز عکسی انتخاب نشده است؛ با «افزودن عکس» اولین تصویر را انتخاب کنید.') + '</div>' +
     '</div>' +
     '</div>' +
     '<div class="adm-audwrap adm-row" data-mode="' + (aud.type || 'school') + '">' +
@@ -3285,8 +3465,72 @@ function adminCollectAnn() {
   });
 }
 
-// کار جاری آپلود: ann (کارت اطلاعیه) | staff (عکس پروفایل) | gallery (گالری)
+// کار جاری آپلود: ann (کارت خبر) | banner (عکس پس‌زمینهٔ اسلاید بنر) | staff (عکس پروفایل) | gallery (گالری)
 var adminUploadJob = { kind: '', idx: -1 };
+
+/* ---------- تب بنر صفحه اصلی ---------- */
+function adminBannerCard(s, i, total) {
+  var src = s.img || placeholderImg('', 'image', '#123257', '#2f7ec3', true);
+  var strip = s.img
+    ? '<span class="adm-galph"><img src="' + s.img + '" alt="">' +
+      '<button type="button" class="adm-banx" data-up="' + i + '" title="حذف عکس این اسلاید" aria-label="حذف عکس پس‌زمینهٔ این اسلاید">' + icon('x') + '</button></span>'
+    : '';
+  var links = BANNER_LINKS.map(function (L) {
+    return '<option value="' + L.v + '"' + (String(s.link || '#announcements') === L.v ? ' selected' : '') + '>' + L.t + '</option>';
+  }).join('');
+  return (
+    '<div class="adm-card" data-i="' + i + '">' +
+    '<div class="adm-card-head">' +
+    '<img class="adm-thumb" src="' + src + '" alt="">' +
+    '<input class="adm-in adm-title adm-btitle" value="' + escHTML(s.title || '') + '" placeholder="عنوان اسلاید (نام مدرسه، شعار یا تیتر)" aria-label="عنوان اسلاید بنر">' +
+    '<button type="button" class="adm-del" data-del="banner" title="حذف اسلاید" aria-label="حذف اسلاید بنر">' + icon('trash') + '</button>' +
+    '</div>' +
+    '<label class="adm-field"><span>متن زیر عنوان</span><input class="adm-in adm-bsub" value="' + escHTML(s.sub || '') + '" placeholder="متن کوتاه زیر عنوان (اختیاری)" aria-label="متن زیر عنوان اسلاید"></label>' +
+    '<div class="adm-row">' +
+    '<label class="adm-field"><span>متن دکمه</span><input class="adm-in adm-bbtn" value="' + escHTML(s.btn || '') + '" placeholder="خالی بماند؛ دکمه نمایش داده نمی‌شود" aria-label="متن دکمهٔ اسلاید"></label>' +
+    '<label class="adm-field"><span>لینک دکمه</span><select class="adm-in adm-blink" aria-label="مقصد دکمهٔ اسلاید">' + links + '</select></label>' +
+    '</div>' +
+    '<div class="adm-field"><span>عکس پس‌زمینه (اختیاری)</span>' +
+    '<div class="adm-galstrip">' + strip +
+    '<button type="button" class="adm-galadd" data-kind="banner" data-up="' + i + '" title="بارگذاری عکس پس‌زمینه" aria-label="بارگذاری عکس پس‌زمینهٔ اسلاید">' + icon('plus') + '<span>' + (s.img ? 'تغییر عکس' : 'افزودن عکس') + '</span></button>' +
+    '</div>' +
+    '<div class="adm-upname">' + (s.img ? 'برای این اسلاید عکس پس‌زمینه انتخاب شده است.' : 'برای این اسلاید عکسی انتخاب نشده؛ بدون عکس، پس‌زمینهٔ آبیِ پیش‌فرض نمایش داده می‌شود.') + ' عکس زیر لایهٔ آبیِ نیمه‌شفاف قرار می‌گیرد تا متن خوانا بماند.</div>' +
+    '</div>' +
+    '<div class="adm-move-row">' +
+    '<button type="button" class="adm-move" data-bm="up"' + (i === 0 ? ' disabled' : '') + '>' + icon('up') + 'جابه‌جایی به بالا</button>' +
+    '<button type="button" class="adm-move" data-bm="down"' + (i === total - 1 ? ' disabled' : '') + '>' + icon('down') + 'جابه‌جایی به پایین</button>' +
+    '</div>' +
+    '</div>'
+  );
+}
+function adminRenderBannerList() {
+  document.getElementById('admBannerCount').textContent = toFa(ADMIN_WORK.banner.length) + ' اسلاید';
+  document.getElementById('admBannerList').innerHTML = ADMIN_WORK.banner.length
+    ? ADMIN_WORK.banner.map(function (s, i) { return adminBannerCard(s, i, ADMIN_WORK.banner.length); }).join('')
+    : '<div class="adm-gempty">هنوز اسلایدی ساخته نشده است؛ با «افزودن اسلاید» اولین اسلاید بنر را بسازید.</div>';
+}
+function adminCollectBanner() {
+  document.querySelectorAll('#admBannerList .adm-card').forEach(function (card) {
+    var i = Number(card.getAttribute('data-i'));
+    var s = ADMIN_WORK.banner[i];
+    if (!s) return;
+    s.title = card.querySelector('.adm-btitle').value.trim();
+    s.sub = card.querySelector('.adm-bsub').value.trim();
+    s.btn = card.querySelector('.adm-bbtn').value.trim();
+    s.link = card.querySelector('.adm-blink').value;
+  });
+}
+// جابه‌جایی ترتیب اسلایدهای بنر (اول متن‌ها ذخیره شوند تا از بین نروند)
+function adminBannerMove(i, dir) {
+  adminCollectBanner();
+  var j = dir === 'up' ? i - 1 : i + 1;
+  if (j < 0 || j >= ADMIN_WORK.banner.length) return;
+  var t = ADMIN_WORK.banner[i];
+  ADMIN_WORK.banner[i] = ADMIN_WORK.banner[j];
+  ADMIN_WORK.banner[j] = t;
+  adminRenderBannerList();
+  adminDirty = true;
+}
 
 // سقف حجم data-URI هر عکس (~۳۰۰KB): چندین عکس در سهمیهٔ محدود localStorage جا می‌شود
 var ADMIN_IMG_MAX_CHARS = 420000;
@@ -3345,10 +3589,17 @@ function adminApplyUpload(data) {
     if (!a) return;
     if (!a.imgs) a.imgs = [];
     if (a.imgUpload && a.imgs.indexOf(a.imgUpload) === -1) { a.imgs.unshift(a.imgUpload); a.imgUpload = ''; } // مهاجرت عکس تکی قدیمی
-    a.imgs.push(data); // اطلاعیه چند عکس می‌تواند داشته باشد (Task 53)
+    a.imgs.push(data); // هر خبر می‌تواند چند عکس داشته باشد (Task 53)
     a.img = 'upload';
     adminRenderAnnList();
-    showToast('عکس به اطلاعیه افزوده شد؛ با «ذخیره تغییرات» روی سایت نمایش داده می‌شود.');
+    showToast('عکس به خبر افزوده شد؛ با «ذخیره تغییرات» روی سایت نمایش داده می‌شود.');
+  } else if (j.kind === 'banner') {
+    adminCollectBanner();
+    var bs = ADMIN_WORK.banner[j.idx];
+    if (!bs) return;
+    bs.img = data; // هر اسلاید یک عکس پس‌زمینه دارد؛ عکس تازه جایگزین می‌شود
+    adminRenderBannerList();
+    showToast('عکس پس‌زمینهٔ اسلاید قرار گرفت؛ با «ذخیره تغییرات» روی سایت نمایش داده می‌شود.');
   } else if (j.kind === 'staff') {
     adminCollectTeachers();
     var t = ADMIN_WORK.teachers[j.idx];
@@ -3724,7 +3975,7 @@ function adminDeleteClass(i) {
   var anCount = ADMIN_WORK.ann.filter(function (a) { return a.aud && a.aud.type === 'class' && a.aud.classId === c.id; }).length;
   var msg = 'کلاس «' + (c.name || 'بدون نام') + '» حذف شود؟\nبرنامه کلاسی این کلاس' +
     (exCount ? ' و ' + toFa(exCount) + ' آزمون ثبت‌شده برای آن' : '') + ' هم پاک می‌شود.' +
-    (anCount ? '\n' + toFa(anCount) + ' اطلاعیهٔ مخصوص این کلاس برای کل پایه ' + GRADE_NAMES[c.grade] + ' نمایش داده می‌شود.' : '');
+    (anCount ? '\n' + toFa(anCount) + ' خبرِ مخصوص این کلاس برای کل پایه ' + GRADE_NAMES[c.grade] + ' نمایش داده می‌شود.' : '');
   if (!window.confirm(msg)) return false;
   ADMIN_WORK.classes.splice(i, 1);
   delete ADMIN_WORK.sched[c.id];
@@ -3771,6 +4022,7 @@ function adminValidateClasses() {
 /* ---------- ذخیره همه تغییرات ---------- */
 function adminSaveAll() {
   adminCollectClasses();
+  adminCollectBanner();
   adminCollectAnn();
   adminCollectSched();
   adminCollectExams();
@@ -3779,12 +4031,17 @@ function adminSaveAll() {
 
   if (!adminValidateClasses()) return;
 
+  for (var bi = 0; bi < ADMIN_WORK.banner.length; bi++) {
+    if (!ADMIN_WORK.banner[bi].title) {
+      showToast('عنوان اسلاید بنر شماره ' + toFa(bi + 1) + ' نباید خالی باشد.'); return;
+    }
+  }
   for (var i = 0; i < ADMIN_WORK.ann.length; i++) {
     if (!ADMIN_WORK.ann[i].title) {
-      showToast('عنوان اطلاعیه شماره ' + toFa(i + 1) + ' نباید خالی باشد.'); return;
+      showToast('عنوان خبر شماره ' + toFa(i + 1) + ' نباید خالی باشد.'); return;
     }
     if (ADMIN_WORK.ann[i].imgUnset) {
-      showToast('برای اطلاعیه شماره ' + toFa(i + 1) + ' «سفارشی» یا «بارگذاری عکس» را انتخاب کنید.'); return;
+      showToast('برای خبر شماره ' + toFa(i + 1) + ' «سفارشی» یا «بارگذاری عکس» را انتخاب کنید.'); return;
     }
   }
   for (var j = 0; j < ADMIN_WORK.exams.length; j++) {
@@ -3811,6 +4068,10 @@ function adminSaveAll() {
   ADMIN_WORK.classes.forEach(function (c) { CLASSES.push(adminDeepCopy(c)); });
   ADMIN_WORK.exams.forEach(function (e) { var ec = classById(e.classId); if (ec) e.className = ec.name; });
 
+  // اعمال بنر صفحه اصلی روی دادهٔ زندهٔ سایت
+  BANNER.length = 0;
+  ADMIN_WORK.banner.forEach(function (s) { BANNER.push(s); });
+
   // اعمال روی داده‌های زنده سایت (با مرتب‌سازی تاریخ: اطلاعیه جدیدترین اول، آزمون بر اساس تاریخ)
   sortAnnouncements(ADMIN_WORK.ann);
   ANNOUNCEMENTS.length = 0;
@@ -3833,8 +4094,9 @@ function adminSaveAll() {
   }
   TEACHERS.forEach(function (t) { if (t.subject && (!t.role || t.role === 'teacher')) TEACHER_BY_SUBJECT[t.subject] = t.name; });
 
-  // ثبت در «دیتابیس» (فعلاً localStorage؛ بعداً API سرور)
+  // ثبت در «دیتابیس» (Supabase + نسخهٔ پشتیبان محلی)
   var ok = SchoolDB.saveAll({
+    banner: BANNER,
     announcements: ANNOUNCEMENTS,
     schedules: SCHEDULES,
     schedTeachers: SCHEDULE_TEACHERS,
@@ -3849,6 +4111,7 @@ function adminSaveAll() {
   }
 
   // بازرندر زنده بخش‌های سایت
+  if (window.heroRefresh) window.heroRefresh(); // بنر صفحه اصلی از نو ساخته می‌شود
   refreshClassSelects();
   renderAnnouncements();
   renderExams(document.getElementById('examFilter').value || 'all');
@@ -3931,12 +4194,21 @@ function adminInit() {
   // ذخیره
   document.getElementById('adminSaveBtn').addEventListener('click', adminSaveAll);
 
+  // افزودن اسلاید بنر صفحه اصلی
+  document.getElementById('admBannerAdd').addEventListener('click', function () {
+    adminCollectBanner();
+    ADMIN_WORK.banner.unshift({ title: '', sub: '', btn: '', link: '#announcements', img: '' });
+    adminRenderBannerList();
+    adminScrollTop();
+    adminDirty = true;
+  });
+
   // افزودن اطلاعیه
   document.getElementById('admAnnAdd').addEventListener('click', function () {
     adminCollectAnn();
     var tdA = adminTodayParts();
     ADMIN_WORK.ann.unshift({
-      title: '', imgUnset: true, text: 'متن اطلاعیه را اینجا بنویسید.',
+      title: '', imgUnset: true, text: 'متن خبر را اینجا بنویسید.',
       date: composeFaDate(tdA.d, tdA.m, tdA.y), dateY: tdA.y, dateM: tdA.m, dateD: tdA.d, imp: 1, img: '', imgs: [],
       imgLabel: '', imgIcon: '', // پیش‌فرض: طرح سفارشیِ خالی (بدون برچسب و آیکون)
       aud: { type: 'school' },
@@ -4037,13 +4309,33 @@ function adminInit() {
       document.getElementById('admImgFile').click();
       return;
     }
+    // بنر صفحه اصلی: جابه‌جایی ترتیب اسلایدها
+    var bmv = e.target.closest('.adm-move');
+    if (bmv) {
+      var bmCard = bmv.closest('.adm-card');
+      if (bmCard) adminBannerMove(Number(bmCard.getAttribute('data-i')), bmv.getAttribute('data-bm'));
+      return;
+    }
+    // بنر صفحه اصلی: حذف عکس پس‌زمینهٔ یک اسلاید
+    var banx = e.target.closest('.adm-banx');
+    if (banx) {
+      var bIdx = Number(banx.getAttribute('data-up'));
+      adminCollectBanner();
+      var bSlide = ADMIN_WORK.banner[bIdx];
+      if (bSlide && bSlide.img && window.confirm('عکس پس‌زمینهٔ این اسلاید حذف شود؟')) {
+        bSlide.img = '';
+        adminRenderBannerList();
+        adminDirty = true;
+      }
+      return;
+    }
     var upc = e.target.closest('.adm-upclear');
     if (upc) {
       if ((upc.getAttribute('data-kind') || 'ann') === 'ann') {
         var ci = Number(upc.getAttribute('data-up'));
         adminCollectAnn();
         var ua = ADMIN_WORK.ann[ci];
-        if (ua && adminAnnPhotos(ua).length && window.confirm('همهٔ عکس‌های آپلودشدهٔ این اطلاعیه حذف شود؟')) {
+        if (ua && adminAnnPhotos(ua).length && window.confirm('همهٔ عکس‌های آپلودشدهٔ این خبر حذف شود؟')) {
           ua.imgUpload = ''; ua.imgs = []; ua.img = '';
           adminRenderAnnList();
           adminDirty = true;
@@ -4057,7 +4349,7 @@ function adminInit() {
       var nai = Number(anx.getAttribute('data-up'));
       adminCollectAnn();
       var na = ADMIN_WORK.ann[nai];
-      if (na && window.confirm('این عکس از اطلاعیه حذف شود؟')) {
+      if (na && window.confirm('این عکس از خبر حذف شود؟')) {
         var nArr = adminAnnPhotos(na);
         nArr.splice(Number(anx.getAttribute('data-gx')), 1);
         na.imgUpload = ''; na.imgs = nArr;
@@ -4096,7 +4388,7 @@ function adminInit() {
     var f = this.files && this.files[0];
     this.value = '';
     if (!f || !adminUploadJob.kind) return;
-    var maxDim = adminUploadJob.kind === 'staff' ? 480 : 900;
+    var maxDim = adminUploadJob.kind === 'staff' ? 480 : (adminUploadJob.kind === 'banner' ? 1400 : 900);
     adminReadImage(f, maxDim, adminApplyUpload);
   });
 
@@ -4114,8 +4406,13 @@ function adminInit() {
     var i = Number(card.getAttribute('data-i'));
     if (isNaN(i) || i < 0) return;
     var kind = del.getAttribute('data-del');
-    if (kind === 'ann') {
-      if (!window.confirm('این اطلاعیه حذف شود؟')) return;
+    if (kind === 'banner') {
+      if (!window.confirm('این اسلاید از بنر صفحه اصلی حذف شود؟')) return;
+      adminCollectBanner();
+      ADMIN_WORK.banner.splice(i, 1);
+      adminRenderBannerList();
+    } else if (kind === 'ann') {
+      if (!window.confirm('این خبر حذف شود؟')) return;
       adminCollectAnn();
       ADMIN_WORK.ann.splice(i, 1);
       adminRenderAnnList();
@@ -4263,6 +4560,10 @@ adminInit();
     window.__SCHOOL_DATA = d;
     try { localStorage.setItem(SCHOOL_DB_KEY, JSON.stringify(d)); } catch (e) {}
 
+    if (Array.isArray(d.banner)) {
+      replaceInPlace(BANNER, d.banner);
+      if (window.heroRefresh) window.heroRefresh(); // بنر تازه بدون رفرش نمایش داده می‌شود
+    }
     if (Array.isArray(d.announcements)) {
       d.announcements.forEach(function (a) {
         if (!a.imgs) a.imgs = [];
@@ -4595,6 +4896,123 @@ adminInit();
     if (openInst && !openInst.sel.isConnected) openInst.close(false);
   }).observe(document.body, { childList: true, subtree: true });
 })();
+</script>
+
+
+<script type="text/plain" data-app>
+/* بنر چرخان صفحه اول: اسلایدها از «پنل مدیریت ← بنر صفحه اصلی» ساخته می‌شوند؛
+   چرخش خودکار، نقطه‌ها، فلش‌ها، کشیدن انگشت و کیبورد.
+   پس از ذخیرهٔ مدیر (یا همگام‌سازی زنده) با heroRefresh بنر از نو ساخته می‌شود. */
+var HERO = null; // نمونهٔ فعال چرخان بنر
+
+function heroCreate() {
+  var hero = document.getElementById('home');
+  if (!hero || !hero.classList.contains('hero')) return null;
+  renderBannerSlides(); // اسلایدها از داده‌های پنل ساخته و در heroTrack قرار می‌گیرند
+  var slides = Array.prototype.slice.call(hero.querySelectorAll('.hero-slide'));
+  var dotsWrap = document.getElementById('heroDots');
+  var prevBtn = document.getElementById('heroPrev');
+  var nextBtn = document.getElementById('heroNext');
+  var n = slides.length;
+  dotsWrap.innerHTML = '';
+  var oneSlide = n < 2; // تک‌اسلاید: فلش‌ها و نقطه‌ها لازم نیستند
+  prevBtn.style.display = oneSlide ? 'none' : '';
+  nextBtn.style.display = oneSlide ? 'none' : '';
+  dotsWrap.style.display = oneSlide ? 'none' : '';
+  if (oneSlide) {
+    slides.forEach(function (sl, i) { sl.classList.toggle('is-active', i === 0); });
+    return { destroy: function () {} };
+  }
+  var INTERVAL = 5500, cur = 0, timer = null, paused = false, offscreen = false;
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var faDigits = function (x) { return String(x).replace(/\d/g, function (d) { return '۰۱۲۳۴۵۶۷۸۹'[d]; }); };
+  var offs = []; // شنونده‌ها برای پاک‌سازی هنگام بازسازی بنر
+  function on(el, ev, fn, opt) { el.addEventListener(ev, fn, opt); offs.push([el, ev, fn, opt]); }
+
+  var dots = slides.map(function (sl, i) {
+    sl.setAttribute('role', 'group');
+    sl.setAttribute('aria-roledescription', 'اسلاید');
+    sl.setAttribute('aria-label', faDigits(i + 1) + ' از ' + faDigits(n));
+    var b = document.createElement('button');
+    b.type = 'button'; b.className = 'hero-dot'; b.setAttribute('role', 'tab');
+    b.setAttribute('aria-label', 'اسلاید ' + faDigits(i + 1));
+    on(b, 'click', function () { show(i); restart(); });
+    dotsWrap.appendChild(b);
+    return b;
+  });
+
+  function show(i) {
+    cur = (i + n) % n;
+    slides.forEach(function (sl, k) {
+      var onn = k === cur;
+      sl.classList.toggle('is-active', onn);
+      sl.setAttribute('aria-hidden', onn ? 'false' : 'true');
+      dots[k].setAttribute('aria-selected', onn ? 'true' : 'false');
+    });
+  }
+  function stop() { if (timer) { clearInterval(timer); timer = null; } }
+  function start() {
+    stop();
+    if (reduce || paused || offscreen || document.hidden) return;
+    timer = setInterval(function () { show(cur + 1); }, INTERVAL);
+  }
+  function restart() { start(); }
+
+  on(nextBtn, 'click', function () { show(cur + 1); restart(); });
+  on(prevBtn, 'click', function () { show(cur - 1); restart(); });
+
+  /* توقف هنگام نگه‌داشتن ماوس یا فوکوس کیبورد */
+  on(hero, 'mouseenter', function () { paused = true; stop(); });
+  on(hero, 'mouseleave', function () { paused = false; start(); });
+  on(hero, 'focusin', function () { paused = true; stop(); });
+  on(hero, 'focusout', function () { paused = false; start(); });
+
+  /* کشیدن انگشت (موبایل): کشیدن به چپ = بعدی (جهت راست‌به‌چپ) */
+  var sx = 0, sy = 0, tracking = false;
+  on(hero, 'touchstart', function (e) {
+    if (e.touches.length !== 1) { tracking = false; return; }
+    sx = e.touches[0].clientX; sy = e.touches[0].clientY; tracking = true; stop();
+  }, { passive: true });
+  on(hero, 'touchend', function (e) {
+    if (!tracking) { start(); return; }
+    tracking = false;
+    var t = e.changedTouches[0], dx = t.clientX - sx, dy = t.clientY - sy;
+    if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy) * 1.4) show(dx < 0 ? cur + 1 : cur - 1);
+    start();
+  }, { passive: true });
+  on(hero, 'touchcancel', function () { tracking = false; start(); }, { passive: true });
+
+  /* کیبورد: فلش‌ها (وقتی فوکوس داخل بنر است) */
+  on(hero, 'keydown', function (e) {
+    if (e.key === 'ArrowLeft') { show(cur + 1); e.preventDefault(); }
+    else if (e.key === 'ArrowRight') { show(cur - 1); e.preventDefault(); }
+  });
+
+  /* توقف وقتی تب پنهان است یا بنر از صفحه بیرون رفته */
+  on(document, 'visibilitychange', start);
+  var io = null;
+  if ('IntersectionObserver' in window) {
+    io = new IntersectionObserver(function (en) { offscreen = !en[0].isIntersecting; start(); }, { threshold: 0.15 });
+    io.observe(hero);
+  }
+
+  show(0);
+  start();
+  return {
+    destroy: function () { // پاک‌سازی کامل برای ساخت دوبارهٔ بنر پس از ذخیرهٔ مدیر
+      stop();
+      offs.forEach(function (o) { o[0].removeEventListener(o[1], o[2], o[3]); });
+      if (io) io.disconnect();
+    }
+  };
+}
+
+function heroRefresh() {
+  if (HERO) { HERO.destroy(); HERO = null; }
+  HERO = heroCreate();
+}
+window.heroRefresh = heroRefresh; // پنل مدیریت و همگام‌سازی زنده پس از ذخیره این تابع را صدا می‌زنند
+heroRefresh();
 </script>
 
 </body>
